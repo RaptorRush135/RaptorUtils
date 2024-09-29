@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.SerilogWebAppPlugin", "RaptorUtils.SerilogWebAppPlugin.csproj", "{176362CE-1D6D-4B56-8ACB-3236058EDA7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.AspNet", "..\..\AspNet\RaptorUtils.AspNet.csproj", "{8D19500E-4386-4171-9988-CBCAE016E03E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{176362CE-1D6D-4B56-8ACB-3236058EDA7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{176362CE-1D6D-4B56-8ACB-3236058EDA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{176362CE-1D6D-4B56-8ACB-3236058EDA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{176362CE-1D6D-4B56-8ACB-3236058EDA7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D19500E-4386-4171-9988-CBCAE016E03E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D19500E-4386-4171-9988-CBCAE016E03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D19500E-4386-4171-9988-CBCAE016E03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D19500E-4386-4171-9988-CBCAE016E03E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B14580A-134A-47FE-8ED6-1740C4AA5722}
+	EndGlobalSection
+EndGlobal
