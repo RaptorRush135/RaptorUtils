@@ -26,6 +26,15 @@ public static class ConfigurationExtensions
             : IsEnabledString(value);
     }
 
+    public static string GetRequiredConnectionString(this IConfiguration configuration, string name)
+    {
+        ArgumentNullException.ThrowIfNull(configuration);
+        ArgumentNullException.ThrowIfNull(name);
+
+        return configuration.GetConnectionString(name)
+            ?? throw new InvalidOperationException($"Required connection string '{name}' not found.");
+    }
+
     public static string GetRequired(this IConfiguration configuration, string key)
     {
         ArgumentNullException.ThrowIfNull(configuration);
@@ -35,13 +44,12 @@ public static class ConfigurationExtensions
             ?? throw new InvalidOperationException($"Required key '{key}' not found.");
     }
 
-    public static string GetRequiredConnectionString(this IConfiguration configuration, string name)
+    public static T GetRequired<T>(this IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(configuration);
-        ArgumentNullException.ThrowIfNull(name);
 
-        return configuration.GetConnectionString(name)
-            ?? throw new InvalidOperationException($"Required connection string '{name}' not found.");
+        return configuration.Get<T>()
+            ?? throw new InvalidOperationException($"Configuration could not be bound to type {typeof(T).FullName}.");
     }
 
     private static bool IsEnabledString(string? value)
