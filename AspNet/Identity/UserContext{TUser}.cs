@@ -21,10 +21,10 @@ public class UserContext<TUser>(
 {
     /// <summary>
     /// Attempts to retrieve the currently logged-in user.
-    /// Returns null if the HttpContext is unavailable or if the user cannot be retrieved.
+    /// Returns <see langword="null"/> if the HttpContext is unavailable or if the user cannot be retrieved.
     /// Logs a warning if the HttpContext is not available.
     /// </summary>
-    /// <returns>The logged-in user, or null if not available.</returns>
+    /// <returns>The logged-in user, or <see langword="null"/> if not available.</returns>
     public async Task<TUser?> TryGetLoggedInUser()
     {
         HttpContext? context = httpContextAccessor.HttpContext;
@@ -39,9 +39,9 @@ public class UserContext<TUser>(
 
     /// <summary>
     /// Attempts to retrieve the currently logged-in user as a tracked user.
-    /// Returns null if the user is not logged in or cannot be retrieved.
+    /// Returns <see langword="null"/> if the user is not logged in or cannot be retrieved.
     /// </summary>
-    /// <returns>A tracked user, or null if not available.</returns>
+    /// <returns>A tracked user, or <see langword="null"/> if not available.</returns>
     public async Task<UserTracker<TUser>?> TryGetLoggedInUserAsTracked()
     {
         if (!(await this.TryGetLoggedInUser() is { } loggedUser))
@@ -50,27 +50,5 @@ public class UserContext<TUser>(
         }
 
         return new UserTracker<TUser>(loggedUser, userManager);
-    }
-
-    // TODO: Remove
-    public async Task<TUser> GetLoggedInUser()
-    {
-        var user = await this.TryGetLoggedInUser();
-        return GetUserValueOrThrow(user);
-    }
-
-    // TODO: Remove
-    public async Task<UserTracker<TUser>> GetLoggedInUserAsTracked()
-    {
-        var user = await this.TryGetLoggedInUserAsTracked();
-        return GetUserValueOrThrow(user);
-    }
-
-    // TODO: Remove
-    private static TUserResult GetUserValueOrThrow<TUserResult>(TUserResult? user)
-        where TUserResult : class
-    {
-        return user
-            ?? throw new InvalidOperationException("No logged in user");
     }
 }
