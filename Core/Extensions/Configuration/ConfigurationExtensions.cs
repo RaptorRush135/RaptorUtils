@@ -8,20 +8,26 @@ using Microsoft.Extensions.Configuration;
 public static class ConfigurationExtensions
 {
     /// <summary>
-    /// Determines whether a configuration setting is enabled, based on a specific key.
-    /// If the key is not found, it defaults to false.
+    /// Determines whether a <paramref name="configuration"/> setting is enabled,
+    /// based on a specific <paramref name="key"/>.
+    /// <para>
+    /// If the <paramref name="key"/> is not found, it defaults to <see langword="false"/>.
+    /// </para>
     /// </summary>
     /// <param name="configuration">The configuration object to query.</param>
     /// <param name="key">The configuration key to check.</param>
-    /// <returns>True if the setting is enabled, otherwise false.</returns>
+    /// <returns><see langword="true"/> if the setting is enabled, otherwise <see langword="false"/>.</returns>
     public static bool IsEnabled(this IConfiguration configuration, string key)
     {
         return configuration.IsEnabled(key, false);
     }
 
     /// <summary>
-    /// Determines whether a configuration setting is enabled, based on a specific key.
-    /// If the key is not found, it returns the specified default value.
+    /// Determines whether a <paramref name="configuration"/> setting is enabled,
+    /// based on a specific <paramref name="key"/>.
+    /// <para>
+    /// If the <paramref name="key"/> is not found, it returns the specified <paramref name="defaultValue"/>.
+    /// </para>
     /// </summary>
     /// <param name="configuration">The configuration object to query.</param>
     /// <param name="key">The configuration key to check.</param>
@@ -34,12 +40,19 @@ public static class ConfigurationExtensions
 
     /// <summary>
     /// Retrieves the enabled state of a configuration setting as a nullable boolean.
-    /// Returns true if the value is "1" or "true" (case-insensitive), otherwise false,
-    /// or null if the key does not exist.
+    /// <para>
+    /// Returns <see langword="true"/> if the value is "1" or "true" (case-insensitive);
+    /// otherwise, it returns <see langword="false"/>.
+    /// </para>
+    /// <para>
+    /// </para>
+    /// If the key does not exist, it returns <see langword="null"/>.
     /// </summary>
     /// <param name="configuration">The configuration object to query.</param>
     /// <param name="key">The configuration key to check.</param>
-    /// <returns>A nullable boolean representing the enabled state, or null if the key does not exist.</returns>
+    /// <returns>
+    /// A nullable boolean representing the enabled state, or <see langword="null"/> if the key does not exist.
+    /// </returns>
     public static bool? GetEnabledState(this IConfiguration configuration, string key)
     {
         ArgumentNullException.ThrowIfNull(configuration);
@@ -53,8 +66,10 @@ public static class ConfigurationExtensions
     }
 
     /// <summary>
-    /// Retrieves a required connection string from the configuration.
+    /// Shorthand for GetSection("ConnectionStrings")[name].
+    /// <para>
     /// Throws an exception if the connection string is not found.
+    /// </para>
     /// </summary>
     /// <param name="configuration">The configuration object to query.</param>
     /// <param name="name">The name of the connection string to retrieve.</param>
@@ -72,14 +87,18 @@ public static class ConfigurationExtensions
     }
 
     /// <summary>
-    /// Retrieves a required configuration value based on a key.
-    /// Throws an exception if the key does not exist.
+    /// Retrieves a required <paramref name="configuration"/> value based on a <paramref name="key"/>.
+    /// <para>
+    /// Throws an exception if the <paramref name="key"/> does not exist.
+    /// </para>
     /// </summary>
     /// <param name="configuration">The configuration object to query.</param>
     /// <param name="key">The configuration key to retrieve.</param>
-    /// <returns>The configuration value associated with the specified key.</returns>
+    /// <returns>
+    /// The <paramref name="configuration"/> value associated with the specified <paramref name="key"/>.
+    /// </returns>
     /// <exception cref="InvalidOperationException">
-    /// Thrown if the key is not found.
+    /// Thrown if the <paramref name="key"/> is not found.
     /// </exception>
     public static string GetRequired(this IConfiguration configuration, string key)
     {
@@ -109,11 +128,16 @@ public static class ConfigurationExtensions
     }
 
     /// <summary>
-    /// Helper method to determine if a string represents an enabled state.
-    /// Returns true if the value is "1" or "true" (case-insensitive), otherwise false.
+    /// Determines if a <paramref name="value"/> represents an enabled state.
+    /// <para>
+    /// Returns <see langword="true"/> if the <paramref name="value"/> is "1" or "true" (case-insensitive),
+    /// otherwise <see langword="false"/>.
+    /// </para>
     /// </summary>
     /// <param name="value">The string value to evaluate.</param>
-    /// <returns>True if the string represents an enabled state, otherwise false.</returns>
+    /// <returns>
+    /// <see langword="true"/> if the string represents an enabled state, otherwise <see langword="false"/>.
+    /// </returns>
     private static bool IsEnabledString(string? value)
     {
         return value is "1"

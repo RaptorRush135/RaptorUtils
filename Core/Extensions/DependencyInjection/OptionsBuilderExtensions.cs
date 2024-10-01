@@ -25,7 +25,7 @@ public static class OptionsBuilderExtensions
     /// The original <see cref="OptionsBuilder{TOptions}"/>, allowing for method chaining.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// Thrown if <paramref name="optionsBuilder"/> is null.
+    /// Thrown if <paramref name="optionsBuilder"/> is <see langword="null"/>.
     /// </exception>
     public static OptionsBuilder<TOptions> Validate<TOptions, TValidate>(this OptionsBuilder<TOptions> optionsBuilder)
         where TOptions : class
