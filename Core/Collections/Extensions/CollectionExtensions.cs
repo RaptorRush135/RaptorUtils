@@ -18,7 +18,7 @@ public static class CollectionExtensions
     /// The collection whose elements should be added to the <paramref name="destination"/>.
     /// </param>
     /// <exception cref="ArgumentNullException">
-    /// Thrown if either <paramref name="destination"/> or <paramref name="collection"/> is null.
+    /// Thrown if either <paramref name="destination"/> or <paramref name="collection"/> is <see langword="null"/>.
     /// </exception>
     public static void AddRange<T>(this ICollection<T> destination, IEnumerable<T> collection)
     {
