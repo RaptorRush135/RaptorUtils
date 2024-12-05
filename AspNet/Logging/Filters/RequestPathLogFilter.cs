@@ -21,7 +21,8 @@ public class RequestPathLogFilter(
     /// </returns>
     public bool IsEnabled(LogEvent logEvent)
     {
-        if (!logEvent.Properties.TryGetValue("RequestPath", out var path))
+        if (logEvent.Level >= LogEventLevel.Warning // TODO
+            || !logEvent.Properties.TryGetValue("RequestPath", out var path))
         {
             return true;
         }
