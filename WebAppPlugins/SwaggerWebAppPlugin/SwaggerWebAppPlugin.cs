@@ -65,7 +65,7 @@ public class SwaggerWebAppPlugin(
 
         if (themeProvider?.Invoke(app) is { } theme)
         {
-            app.UseSwaggerThemes(theme);
+            app.UseSwaggerUI(theme);
         }
 
         app.UseSwaggerUI();
