@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.0.0" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.3.1" />
   </ItemGroup>
 
   <ItemGroup>
