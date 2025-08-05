@@ -3,11 +3,11 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
 
-    <PackageReference Include="NGuid" Version="1.0.0" PrivateAssets="compile" />
+    <PackageReference Include="NGuid" PrivateAssets="compile" />
 
-    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" />
 
-    <PackageReference Include="System.Linq.Async" Version="6.0.3" PrivateAssets="compile" />
+    <PackageReference Include="System.Linq.Async" PrivateAssets="compile" />
   </ItemGroup>
 
 </Project>

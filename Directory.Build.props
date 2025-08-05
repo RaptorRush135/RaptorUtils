@@ -12,17 +12,17 @@
 
   <ItemGroup>
 
-    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.556">
+    <PackageReference Include="StyleCop.Analyzers.Unstable">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.15.0.120848">
+    <PackageReference Include="SonarAnalyzer.CSharp">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
 
-    <PackageReference Include="Roslynator.Analyzers" Version="4.13.1">
+    <PackageReference Include="Roslynator.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
