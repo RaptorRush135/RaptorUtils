@@ -1,4 +1,4 @@
-﻿namespace RaptorUtils.AspNet.Identity;
+﻿namespace RaptorUtils.AspNet.Identity.Extensions;
 
 using System.Diagnostics.Contracts;
 
@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 
 /// <summary>
-/// Helper methods for converting <see cref="IdentityResult"/> into validation problems.
+/// Extension methods for <see cref="IdentityResult"/>.
 /// </summary>
-public static class IdentityValidationHelper
+public static class IdentityResultExtensions
 {
     /// <summary>
     /// Creates a <see cref="ValidationProblem"/> from the specified <paramref name="result"/>.
@@ -20,8 +20,10 @@ public static class IdentityValidationHelper
     /// Thrown when <paramref name="result"/> represents a successful operation.
     /// </exception>
     [Pure]
-    public static ValidationProblem CreateValidationProblem(IdentityResult result)
+    public static ValidationProblem ToValidationProblem(this IdentityResult result)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         if (result.Succeeded)
         {
             throw new ArgumentException("A ValidationProblem should only be created on not succeeded.");

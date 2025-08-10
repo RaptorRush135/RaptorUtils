@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using RaptorUtils.AspNet.Identity.Api.Services;
+using RaptorUtils.AspNet.Identity.Extensions;
 
 /// <summary>
 /// Provides an HTTP endpoint for registering a new user account.
@@ -37,7 +38,7 @@ public static class RegisterEndpoint
 
         if (!result.Succeeded)
         {
-            return IdentityValidationHelper.CreateValidationProblem(result);
+            return result.ToValidationProblem();
         }
 
         return TypedResults.Ok();
