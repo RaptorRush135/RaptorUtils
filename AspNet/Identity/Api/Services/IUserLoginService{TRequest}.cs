@@ -1,8 +1,6 @@
 ﻿namespace RaptorUtils.AspNet.Identity.Api.Services;
 
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Identity;
+using RaptorUtils.AspNet.Identity.Api.Results;
 
 /// <summary>
 /// Defines a service for handling user login requests.
@@ -19,8 +17,8 @@ public interface IUserLoginService<TRequest>
     /// The login request containing the user credentials.
     /// </param>
     /// <returns>
-    /// A <see cref="Task{SignInResult}"/> representing the asynchronous login operation,
+    /// A <see cref="Task{LoginResult}"/> representing the asynchronous login operation,
     /// containing the result of the sign-in attempt.
     /// </returns>
-    Task<SignInResult> Login(TRequest request);
+    Task<LoginResult> Login(TRequest request);
 }

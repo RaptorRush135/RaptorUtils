@@ -2,6 +2,8 @@
 
 using Microsoft.AspNetCore.Identity;
 
+using RaptorUtils.AspNet.Identity.Api.Results;
+
 /// <summary>
 /// Provides a base implementation of <see cref="IUserLoginService{TRequest}"/> that
 /// uses <see cref="SignInManager{TUser}"/> to perform user login operations.
@@ -20,32 +22,25 @@ public abstract class UserLoginService<TUser, TRequest>(
     : IUserLoginService<TRequest>
     where TUser : class
 {
-    /// <summary>
-    /// Attempts to log in a user based on the provided login request.
-    /// </summary>
-    /// <param name="request">
-    /// The login request containing user credentials.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Task{SignInResult}"/> representing the asynchronous login operation,
-    /// containing the result of the sign-in attempt.
-    /// </returns>
-    public async Task<SignInResult> Login(TRequest request)
+    /// <inheritdoc />
+    public async Task<LoginResult> Login(TRequest request)
     {
         var flow = await this.SignInFlow(request);
 
-        if (flow.IsFail(out var result))
+        if (flow.IsFail(out var error))
         {
-            return result;
+            return LoginResult.FromError(error);
         }
 
         var context = flow.Context.Value;
 
-        return await signInManager.PasswordSignInAsync(
+        var signInResult = await signInManager.PasswordSignInAsync(
             context.User,
             context.Password,
             context.IsPersistent,
             context.LockoutOnFailure);
+
+        return LoginResult.FromSignIn(signInResult);
     }
 
     /// <summary>

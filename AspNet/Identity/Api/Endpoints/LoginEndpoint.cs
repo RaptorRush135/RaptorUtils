@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
+using RaptorUtils.AspNet.Identity.Api.Results;
 using RaptorUtils.AspNet.Identity.Api.Services;
 
 /// <summary>
@@ -32,13 +33,12 @@ public static class LoginEndpoint
         [FromBody] TRequest request,
         [FromServices] IUserLoginService<TRequest> userLoginService)
     {
-        var result = await userLoginService.Login(request);
+        LoginResult result = await userLoginService.Login(request);
 
         if (!result.Succeeded)
         {
-            return TypedResults.Problem(
-                result.ToString(),
-                statusCode: StatusCodes.Status401Unauthorized);
+            return result.Error.ToProblemHttpResult(
+                defaultStatus: StatusCodes.Status401Unauthorized);
         }
 
         return TypedResults.Ok();

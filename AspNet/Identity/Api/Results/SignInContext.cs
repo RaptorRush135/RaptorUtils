@@ -1,4 +1,4 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Services;
+﻿namespace RaptorUtils.AspNet.Identity.Api.Results;
 
 /// <summary>
 /// Represents the context information required to attempt a user sign-in.

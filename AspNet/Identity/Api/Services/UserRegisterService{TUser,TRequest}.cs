@@ -20,16 +20,7 @@ public abstract class UserRegisterService<TUser, TRequest>(
     : IUserRegisterService<TRequest>
     where TUser : class
 {
-    /// <summary>
-    /// Registers a new user using the provided registration request.
-    /// </summary>
-    /// <param name="request">
-    /// The registration request containing user details.
-    /// </param>
-    /// <returns>
-    /// A <see cref="System.Threading.Tasks.Task"/> representing the asynchronous
-    /// registration operation, containing the <see cref="IdentityResult"/>.
-    /// </returns>
+    /// <inheritdoc />
     public async Task<IdentityResult> Register(TRequest request)
     {
         TUser user = this.CreateUser(request, out string password);
