@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using RaptorUtils.AspNet.Identity.Api.Results;
 
 /// <summary>
-/// Provides a base implementation of <see cref="IUserLoginService{TRequest}"/> that
+/// Provides a base implementation of <see cref="IUserLoginService{TUser, TRequest}"/> that
 /// uses <see cref="SignInManager{TUser}"/> to perform user login operations.
 /// </summary>
 /// <typeparam name="TUser">
@@ -19,17 +19,17 @@ using RaptorUtils.AspNet.Identity.Api.Results;
 /// </param>
 public abstract class UserLoginService<TUser, TRequest>(
     SignInManager<TUser> signInManager)
-    : IUserLoginService<TRequest>
+    : IUserLoginService<TUser, TRequest>
     where TUser : class
 {
     /// <inheritdoc />
-    public async Task<LoginResult> Login(TRequest request)
+    public async Task<LoginResult<TUser>> Login(TRequest request)
     {
         var flow = await this.SignInFlow(request);
 
         if (flow.IsFail(out var error))
         {
-            return LoginResult.FromError(error);
+            return LoginResult<TUser>.FromError(error);
         }
 
         var context = flow.Context.Value;
@@ -40,7 +40,7 @@ public abstract class UserLoginService<TUser, TRequest>(
             context.IsPersistent,
             context.LockoutOnFailure);
 
-        return LoginResult.FromSignIn(signInResult);
+        return LoginResult<TUser>.FromSignIn(signInResult, context.User);
     }
 
     /// <summary>

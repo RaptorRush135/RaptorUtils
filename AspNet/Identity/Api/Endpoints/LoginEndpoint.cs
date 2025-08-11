@@ -14,26 +14,22 @@ public static class LoginEndpoint
 {
     /// <summary>
     /// Processes a login request by validating the provided credentials
-    /// using the specified <see cref="IUserLoginService{TRequest}"/>.
+    /// using the specified <see cref="IUserLoginService{TUser, TRequest}"/>.
     /// </summary>
-    /// <typeparam name="TRequest">
-    /// The type representing the login request payload.
-    /// </typeparam>
-    /// <param name="request">
-    /// The login request data, provided in the HTTP request body.
-    /// </param>
-    /// <param name="userLoginService">
-    /// The login service used to authenticate the request.
-    /// </param>
+    /// <typeparam name="TUser">The user type.</typeparam>
+    /// <typeparam name="TRequest">The type of the login request.</typeparam>
+    /// <param name="request">The login request payload.</param>
+    /// <param name="userLoginService">The login service to process the request.</param>
     /// <returns>
-    /// Returns <see cref="Ok"/> if the login succeeds,
-    /// or <see cref="ProblemHttpResult"/> with a 401 status code if authentication fails.
+    /// Returns an <see cref="Ok"/> result if login succeeds; otherwise,
+    /// returns a <see cref="ProblemHttpResult"/> with status code 401 Unauthorized.
     /// </returns>
-    public static async Task<Results<Ok, ProblemHttpResult>> Handle<TRequest>(
+    public static async Task<Results<Ok, ProblemHttpResult>> Handle<TUser, TRequest>(
         [FromBody] TRequest request,
-        [FromServices] IUserLoginService<TRequest> userLoginService)
+        [FromServices] IUserLoginService<TUser, TRequest> userLoginService)
+        where TUser : class
     {
-        LoginResult result = await userLoginService.Login(request);
+        LoginResult<TUser> result = await userLoginService.Login(request);
 
         if (!result.Succeeded)
         {
