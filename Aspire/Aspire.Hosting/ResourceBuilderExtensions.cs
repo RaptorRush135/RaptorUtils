@@ -14,13 +14,11 @@ public static class ResourceBuilderExtensions
     /// Adds positional arguments to the resource builder's argument context.
     /// Ensures that a placeholder for positional arguments is present in the context.
     /// </summary>
-    /// <typeparam name="T">
-    /// The type of the resource being built, which must implement <see cref="IResourceWithArgs"/>.
-    /// </typeparam>
-    /// <param name="builder">The resource builder to extend.</param>
+    /// <typeparam name="T"> The resource type.</typeparam>
+    /// <param name="builder">The resource builder.</param>
     /// <param name="args">The positional arguments to add to the resource builder.</param>
     /// <returns>
-    /// An updated instance of <see cref="IResourceBuilder{T}"/> with the added positional arguments.
+    /// <returns>The <see cref="IResourceBuilder{T}"/>.</returns>
     /// </returns>
     public static IResourceBuilder<T> WithPositionalArgs<T>(
         this IResourceBuilder<T> builder, params string[] args)
@@ -35,5 +33,28 @@ public static class ResourceBuilderExtensions
 
             context.Args.AddRange(args.Cast<object>());
         });
+    }
+
+    /// <summary>
+    /// References a resource and wait for its readiness.
+    /// </summary>
+    /// <typeparam name="T">The resource type.</typeparam>
+    /// <param name="builder">The resource builder.</param>
+    /// <param name="dependency">The resource builder for the dependency to reference.</param>
+    /// <param name="connectionName">
+    /// An override of the dependency resource's name for the connection string.
+    /// The resulting connection string will be "ConnectionStrings__connectionName"
+    /// if this is not <see langword="null"/>.
+    /// </param>
+    /// <returns>The <see cref="IResourceBuilder{T}"/>.</returns>
+    public static IResourceBuilder<T> WithReferencedDependency<T>(
+        this IResourceBuilder<T> builder,
+        IResourceBuilder<IResourceWithConnectionString> dependency,
+        string? connectionName = null)
+        where T : IResourceWithEnvironment, IResourceWithWaitSupport
+    {
+        return builder
+            .WithReference(dependency, connectionName)
+            .WaitFor(dependency);
     }
 }
