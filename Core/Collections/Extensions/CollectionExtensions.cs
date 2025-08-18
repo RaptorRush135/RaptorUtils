@@ -20,7 +20,7 @@ public static class CollectionExtensions
     /// <exception cref="ArgumentNullException">
     /// Thrown if either <paramref name="destination"/> or <paramref name="collection"/> is <see langword="null"/>.
     /// </exception>
-    public static void AddRange<T>(this ICollection<T> destination, IEnumerable<T> collection)
+    public static void AddRange<T>(this ICollection<T> destination, params IEnumerable<T> collection)
     {
         ArgumentNullException.ThrowIfNull(destination);
         ArgumentNullException.ThrowIfNull(collection);
