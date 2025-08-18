@@ -21,7 +21,7 @@ public abstract class UserRegisterService<TUser, TRequest>(
     where TUser : class
 {
     /// <inheritdoc />
-    public async Task<IdentityResult> Register(TRequest request)
+    public virtual async Task<IdentityResult> Register(TRequest request)
     {
         TUser user = this.CreateUser(request, out string password);
 

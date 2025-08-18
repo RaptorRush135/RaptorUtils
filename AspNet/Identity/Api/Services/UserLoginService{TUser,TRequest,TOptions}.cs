@@ -26,7 +26,7 @@ public abstract class UserLoginService<TUser, TRequest, TOptions>(
     where TUser : class
 {
     /// <inheritdoc />
-    public async Task<LoginResult<TUser>> Login(TRequest request, TOptions options)
+    public virtual async Task<LoginResult<TUser>> Login(TRequest request, TOptions options)
     {
         var flow = await this.SignInFlow(request, options);
 
