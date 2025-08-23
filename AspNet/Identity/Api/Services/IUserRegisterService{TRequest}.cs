@@ -1,7 +1,5 @@
 ﻿namespace RaptorUtils.AspNet.Identity.Api.Services;
 
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Identity;
 
 /// <summary>

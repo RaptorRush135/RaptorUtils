@@ -1,7 +1,5 @@
 ﻿namespace RaptorUtils.AspNet.Applications;
 
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Builder;
 
 /// <summary>

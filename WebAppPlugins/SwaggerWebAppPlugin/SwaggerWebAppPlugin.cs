@@ -1,8 +1,5 @@
 ﻿namespace RaptorUtils.AspNet.Applications.Plugins.Swagger;
 
-using System;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
