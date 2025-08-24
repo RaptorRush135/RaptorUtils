@@ -15,8 +15,11 @@ public static class RegisterEndpoint
 {
     /// <summary>
     /// Processes a registration request by creating a new user account
-    /// using the specified <see cref="IUserRegisterService{TRequest}"/>.
+    /// using the specified <see cref="IUserRegisterService{TUser, TRequest}"/>.
     /// </summary>
+    /// <typeparam name="TUser">
+    /// The type representing the application user entity.
+    /// </typeparam>
     /// <typeparam name="TRequest">
     /// The type representing the registration request payload.
     /// </typeparam>
@@ -30,9 +33,10 @@ public static class RegisterEndpoint
     /// Returns <see cref="Ok"/> if the registration succeeds,
     /// or a <see cref="ValidationProblem"/> containing validation errors if it fails.
     /// </returns>
-    public static async Task<Results<Ok, ValidationProblem>> Handle<TRequest>(
+    public static async Task<Results<Ok, ValidationProblem>> Handle<TUser, TRequest>(
         [FromBody] TRequest request,
-        [FromServices] IUserRegisterService<TRequest> userRegisterService)
+        [FromServices] IUserRegisterService<TUser, TRequest> userRegisterService)
+        where TUser : class
     {
         IdentityResult result = await userRegisterService.Register(request);
 

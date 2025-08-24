@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Identity;
 
 /// <summary>
-/// Provides a base implementation of <see cref="IUserRegisterService{TRequest}"/> that
+/// Provides a base implementation of <see cref="IUserRegisterService{TUser, TRequest}"/> that
 /// uses <see cref="UserManager{TUser}"/> to perform user registration operations.
 /// </summary>
 /// <typeparam name="TUser">
@@ -17,28 +17,40 @@ using Microsoft.AspNetCore.Identity;
 /// </param>
 public abstract class UserRegisterService<TUser, TRequest>(
     UserManager<TUser> userManager)
-    : IUserRegisterService<TRequest>
+    : IUserRegisterService<TUser, TRequest>
     where TUser : class
 {
-    /// <inheritdoc />
-    public virtual async Task<IdentityResult> Register(TRequest request)
-    {
-        TUser user = this.CreateUser(request, out string password);
+    /// <summary>
+    /// Gets the <see cref="UserManager{TUser}"/> used to manage user accounts.
+    /// </summary>
+    protected UserManager<TUser> UserManager { get; } = userManager;
 
-        return await userManager.CreateAsync(user, password);
+    /// <inheritdoc />
+    public virtual async Task<UserIdentityResult<TUser>> Register(TRequest request)
+    {
+        TUser user = this.CreateUser(request, out string? password);
+
+        IdentityResult result = await (password != null
+            ? this.UserManager.CreateAsync(user, password)
+            : this.UserManager.CreateAsync(user));
+
+        return !result.Succeeded
+            ? UserIdentityResult<TUser>.Failed(result)
+            : UserIdentityResult<TUser>.Success(result, user);
     }
 
     /// <summary>
     /// Creates a new user instance from the registration request and outputs the password.
+    /// If <paramref name="password"/> is <see langword="null"/>, the user will be created without a password.
     /// </summary>
     /// <param name="request">
     /// The registration request data.
     /// </param>
     /// <param name="password">
-    /// The password extracted from the request to use for the new user.
+    /// The password extracted from the request, or <see langword="null"/> if no password is supplied.
     /// </param>
     /// <returns>
     /// A new user instance based on the registration request.
     /// </returns>
-    protected abstract TUser CreateUser(TRequest request, out string password);
+    protected abstract TUser CreateUser(TRequest request, out string? password);
 }
