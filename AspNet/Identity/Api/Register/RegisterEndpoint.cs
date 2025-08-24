@@ -1,11 +1,10 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Endpoints;
+﻿namespace RaptorUtils.AspNet.Identity.Api.Register;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using RaptorUtils.AspNet.Identity.Api.Services;
 using RaptorUtils.AspNet.Identity.Extensions;
 
 /// <summary>

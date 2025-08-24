@@ -1,4 +1,4 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Results;
+﻿namespace RaptorUtils.AspNet.Identity.Api.Login.Results;
 
 using System.Diagnostics.CodeAnalysis;
 

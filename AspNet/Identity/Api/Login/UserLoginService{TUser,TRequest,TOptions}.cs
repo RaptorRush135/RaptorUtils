@@ -1,8 +1,8 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Services;
+﻿namespace RaptorUtils.AspNet.Identity.Api.Login;
 
 using Microsoft.AspNetCore.Identity;
 
-using RaptorUtils.AspNet.Identity.Api.Results;
+using RaptorUtils.AspNet.Identity.Api.Login.Results;
 
 /// <summary>
 /// Provides a base implementation of <see cref="IUserLoginService{TUser, TRequest, TOptions}"/> that

@@ -1,6 +1,6 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Services;
+﻿namespace RaptorUtils.AspNet.Identity.Api.Login;
 
-using RaptorUtils.AspNet.Identity.Api.Results;
+using RaptorUtils.AspNet.Identity.Api.Login.Results;
 
 /// <summary>
 /// Defines a service for handling user login requests.

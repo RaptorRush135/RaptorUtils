@@ -1,4 +1,4 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Services;
+﻿namespace RaptorUtils.AspNet.Identity.Api.Register;
 
 using Microsoft.AspNetCore.Identity;
 

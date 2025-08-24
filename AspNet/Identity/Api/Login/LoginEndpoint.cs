@@ -1,11 +1,10 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Endpoints;
+﻿namespace RaptorUtils.AspNet.Identity.Api.Login;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
-using RaptorUtils.AspNet.Identity.Api.Results;
-using RaptorUtils.AspNet.Identity.Api.Services;
+using RaptorUtils.AspNet.Identity.Api.Login.Results;
 
 /// <summary>
 /// Provides an HTTP endpoint for handling user login requests.

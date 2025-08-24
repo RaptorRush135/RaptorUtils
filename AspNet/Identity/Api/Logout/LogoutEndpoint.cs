@@ -1,4 +1,4 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Endpoints;
+﻿namespace RaptorUtils.AspNet.Identity.Api.Logout;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

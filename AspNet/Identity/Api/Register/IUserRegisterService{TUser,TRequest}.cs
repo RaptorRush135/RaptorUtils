@@ -1,4 +1,4 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Services;
+﻿namespace RaptorUtils.AspNet.Identity.Api.Register;
 
 /// <summary>
 /// Defines a service for handling user registration requests.

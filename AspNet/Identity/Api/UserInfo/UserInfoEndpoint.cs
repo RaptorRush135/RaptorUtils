@@ -1,10 +1,8 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Endpoints;
+﻿namespace RaptorUtils.AspNet.Identity.Api.UserInfo;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-
-using RaptorUtils.AspNet.Identity.Api.Services;
 
 /// <summary>
 /// Provides an HTTP endpoint for retrieving information about the currently authenticated user.

@@ -1,4 +1,4 @@
-﻿namespace RaptorUtils.AspNet.Identity.Api.Services;
+﻿namespace RaptorUtils.AspNet.Identity.Api.UserInfo;
 
 /// <summary>
 /// Defines a service for retrieving information about a specific user.
