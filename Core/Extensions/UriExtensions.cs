@@ -13,10 +13,13 @@ public static class UriExtensions
     /// Appends path segments to the given <see cref="Uri"/>.
     /// </summary>
     /// <param name="uri">The base URI to append to.</param>
+    /// <param name="withTrailingSlash">
+    /// Whether to append a trailing slash to the end of the resulting path.
+    /// </param>
     /// <param name="paths">Path segments to append.</param>
     /// <returns>A new <see cref="Uri"/> with the additional path segments appended.</returns>
     [PerformanceSensitive]
-    public static Uri Append(this Uri uri, params ReadOnlySpan<string?> paths)
+    public static Uri Append(this Uri uri, bool withTrailingSlash = true, params ReadOnlySpan<string?> paths)
     {
         ArgumentNullException.ThrowIfNull(uri);
 
@@ -38,7 +41,10 @@ public static class UriExtensions
             }
         }
 
-        pathBuilder.Append('/');
+        if (withTrailingSlash)
+        {
+            pathBuilder.Append('/');
+        }
 
         var builder = new UriBuilder(uri)
         {

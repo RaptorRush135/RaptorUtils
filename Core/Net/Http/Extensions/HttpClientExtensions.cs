@@ -25,6 +25,6 @@ public static class HttpClientExtensions
     {
         ArgumentNullException.ThrowIfNull(client);
 
-        client.BaseAddress = client.BaseAddress?.Append(paths);
+        client.BaseAddress = client.BaseAddress?.Append(paths: paths);
     }
 }
