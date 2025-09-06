@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.SerilogWebAppPlugin", "RaptorUtils.SerilogWebAppPlugin.csproj", "{176362CE-1D6D-4B56-8ACB-3236058EDA7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.AspNet.SerilogWebAppPlugin", "RaptorUtils.AspNet.SerilogWebAppPlugin.csproj", "{176362CE-1D6D-4B56-8ACB-3236058EDA7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.AspNet", "..\..\AspNet\RaptorUtils.AspNet.csproj", "{8D19500E-4386-4171-9988-CBCAE016E03E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.AspNet", "..\..\Core\RaptorUtils.AspNet.csproj", "{8D19500E-4386-4171-9988-CBCAE016E03E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

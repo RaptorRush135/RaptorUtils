@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\AspNet\RaptorUtils.AspNet.csproj" />
+    <ProjectReference Include="..\..\Core\RaptorUtils.AspNet.csproj" />
   </ItemGroup>
 
 </Project>
