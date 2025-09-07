@@ -7,12 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 /// or fail with an error message.
 /// </summary>
 /// <typeparam name="T">The type of the successful result value.</typeparam>
-public sealed class Result<T>
+public readonly record struct Result<T>
 {
-    private Result()
-    {
-    }
-
     /// <summary>
     /// Gets the value of a successful operation.
     /// Will be <see langword="null"/> if <see cref="Success"/> is <see langword="false"/>.
@@ -46,6 +42,7 @@ public sealed class Result<T>
     /// <exception cref="InvalidOperationException">Thrown if <paramref name="error"/> is <see langword="null"/>.</exception>
     public static Result<T> Fail(string error) => new()
     {
-        Error = error ?? throw new InvalidOperationException("Error message cannot be null."),
+        Error = error
+            ?? throw new InvalidOperationException("Error message cannot be null."),
     };
 }
