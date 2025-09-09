@@ -2,16 +2,19 @@
 
 using Microsoft.AspNetCore.Identity;
 
-using NGuid;
-
 /// <summary>
-/// A specialized <see cref="IdentityRoleGenerator{TKey}"/> that generates roles
-/// using <see cref="Guid"/> as the role identifier type.
+/// A specialized <see cref="IdentityRoleGenerator{TRole, TKey}"/> that generates roles
+/// with <see cref="Guid"/> identifiers.
 /// </summary>
-public class IdentityRoleGenerator(
+/// <typeparam name="TRole">
+/// The role type to generate. Must derive from <see cref="IdentityRole{Guid}"/>
+/// and have a public parameterless constructor.
+/// </typeparam>
+public class IdentityRoleGenerator<TRole>(
     Guid namespaceId,
     ILookupNormalizer? normalizer = null)
-    : IdentityRoleGenerator<Guid>(
+    : IdentityRoleGenerator<TRole, Guid>(
         namespaceId,
         id => id,
-        normalizer);
+        normalizer)
+    where TRole : IdentityRole<Guid>, new();
