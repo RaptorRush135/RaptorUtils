@@ -5,78 +5,100 @@ using Microsoft.AspNetCore.Identity;
 using NGuid;
 
 /// <summary>
-/// Generates <see cref="IdentityRole"/> instances based on a given namespace and optional name normalizer.
+/// Provides functionality to generate <see cref="IdentityRole{TKey}"/> instances
+/// from a given namespace and optional role name normalizer.
 /// </summary>
-/// <param name="namespaceId">A unique identifier used as the namespace for generating role ids.</param>
+/// <typeparam name="TKey">
+/// The type of the role identifier. Must implement <see cref="IEquatable{T}"/>.
+/// </typeparam>
+/// <param name="namespaceId">
+/// A unique <see cref="Guid"/> used as the namespace for generating deterministic role identifiers.
+/// </param>
+/// <param name="keyConverter">
+/// A delegate that converts the generated <see cref="Guid"/>
+/// into the role identifier of type <typeparamref name="TKey"/>.
+/// </param>
 /// <param name="normalizer">
 /// An optional <see cref="ILookupNormalizer"/> instance for normalizing role names.
 /// If not provided, <see cref="UpperInvariantLookupNormalizer"/> is used by default.
 /// </param>
-public class IdentityRoleGenerator(
+public class IdentityRoleGenerator<TKey>(
     Guid namespaceId,
+    Func<Guid, TKey> keyConverter,
     ILookupNormalizer? normalizer = null)
+    where TKey : IEquatable<TKey>
 {
     /// <summary>
-    /// Gets the normalizer used for normalizing role names.
-    /// Defaults to <see cref="UpperInvariantLookupNormalizer"/> if no normalizer was provided.
+    /// Gets the normalizer used for role name normalization.
+    /// Defaults to <see cref="UpperInvariantLookupNormalizer"/> when no normalizer was provided.
     /// </summary>
     public ILookupNormalizer Normalizer => normalizer ??= new UpperInvariantLookupNormalizer();
 
     /// <summary>
-    /// Generates a collection of <see cref="IdentityRole"/> instances based on the names of an enumeration type.
+    /// Generates a collection of <see cref="IdentityRole{TKey}"/> instances
+    /// based on the names of an <see langword="enum"/> type.
     /// </summary>
     /// <typeparam name="TEnum">
-    /// The enumeration type whose names are used to generate roles. Must be a struct representing an <see langword="enum"/>.
+    /// The <see langword="enum"/> type whose names are used to generate roles.
     /// </typeparam>
     /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of <see cref="IdentityRole"/> objects,
-    /// each corresponding to a name in the specified enumeration.
+    /// An <see cref="IEnumerable{T}"/> of <see cref="IdentityRole{TKey}"/> objects,
+    /// each corresponding to a value name in the specified enumeration.
     /// </returns>
-    public IEnumerable<IdentityRole> Generate<TEnum>()
+    public IEnumerable<IdentityRole<TKey>> Generate<TEnum>()
         where TEnum : struct, Enum
     {
         return this.Generate(Enum.GetNames<TEnum>());
     }
 
     /// <summary>
-    /// Generates a collection of <see cref="IdentityRole"/> instances based on the specified role names.
+    /// Generates a collection of <see cref="IdentityRole{TKey}"/> instances
+    /// from the specified role names.
     /// </summary>
-    /// <param name="names">An array of role names to generate <see cref="IdentityRole"/> instances for.</param>
+    /// <param name="names">
+    /// An array of role names for which to generate <see cref="IdentityRole{TKey}"/> instances.
+    /// </param>
     /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of <see cref="IdentityRole"/> objects, each corresponding to a specified name.
+    /// An <see cref="IEnumerable{T}"/> of <see cref="IdentityRole{TKey}"/> objects,
+    /// one for each specified name.
     /// </returns>
-    public IEnumerable<IdentityRole> Generate(params string[] names)
+    public IEnumerable<IdentityRole<TKey>> Generate(params string[] names)
     {
         return this.Generate((IEnumerable<string>)names);
     }
 
     /// <summary>
-    /// Generates a collection of <see cref="IdentityRole"/> instances based on the specified collection of role names.
+    /// Generates a collection of <see cref="IdentityRole{TKey}"/> instances
+    /// from the specified collection of role names.
     /// </summary>
-    /// <param name="names">A collection of role names to generate <see cref="IdentityRole"/> instances for.</param>
+    /// <param name="names">
+    /// A collection of role names for which to generate <see cref="IdentityRole{TKey}"/> instances.
+    /// </param>
     /// <returns>
-    /// An <see cref="IEnumerable{T}"/> of <see cref="IdentityRole"/> objects, each corresponding to a specified name.
+    /// An <see cref="IEnumerable{T}"/> of <see cref="IdentityRole{TKey}"/> objects,
+    /// one for each specified name.
     /// </returns>
-    public IEnumerable<IdentityRole> Generate(IEnumerable<string> names)
+    public IEnumerable<IdentityRole<TKey>> Generate(IEnumerable<string> names)
     {
         return names.Select(name => this.Generate(name));
     }
 
     /// <summary>
-    /// Generates a single <see cref="IdentityRole"/> instance for a given role name.
+    /// Generates a single <see cref="IdentityRole{TKey}"/> instance for a given role name.
     /// </summary>
-    /// <param name="name">The name of the role to generate.</param>
+    /// <param name="name">The role name to generate.</param>
     /// <returns>
-    /// An <see cref="IdentityRole"/> object with a unique id, the specified name, and a normalized name.
+    /// An <see cref="IdentityRole{TKey}"/> with a deterministic identifier,
+    /// the specified name, and its normalized equivalent.
     /// </returns>
-    public IdentityRole Generate(string name)
+    public IdentityRole<TKey> Generate(string name)
     {
         Guid id = GuidHelpers.CreateFromName(namespaceId, name);
         string normalizedName = this.Normalizer.NormalizeName(name);
 
         return new()
         {
-            Id = id.ToString(),
+            Id = keyConverter.Invoke(id),
             Name = name,
             NormalizedName = normalizedName,
         };
