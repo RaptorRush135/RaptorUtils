@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22 d17.14
+VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaptorUtils.AspNet.EntityFramework", "RaptorUtils.AspNet.EntityFramework.csproj", "{28C29D65-535B-BA6B-DCB9-B65D7BF2157F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaptorUtils.Core", "..\..\Core\RaptorUtils.Core.csproj", "{C27DFB5B-FE81-2F6C-386C-A25C6FBDA858}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaptorUtils.EntityFramework", "..\..\EntityFramework\RaptorUtils.EntityFramework.csproj", "{A5365358-8470-BF41-FCF8-745537DC3A02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{28C29D65-535B-BA6B-DCB9-B65D7BF2157F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28C29D65-535B-BA6B-DCB9-B65D7BF2157F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28C29D65-535B-BA6B-DCB9-B65D7BF2157F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C27DFB5B-FE81-2F6C-386C-A25C6FBDA858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C27DFB5B-FE81-2F6C-386C-A25C6FBDA858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C27DFB5B-FE81-2F6C-386C-A25C6FBDA858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C27DFB5B-FE81-2F6C-386C-A25C6FBDA858}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5365358-8470-BF41-FCF8-745537DC3A02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5365358-8470-BF41-FCF8-745537DC3A02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5365358-8470-BF41-FCF8-745537DC3A02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5365358-8470-BF41-FCF8-745537DC3A02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
