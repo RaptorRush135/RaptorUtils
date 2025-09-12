@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <AspireVersion>9.4.2</AspireVersion>
-    <MicrosoftExtensionsVersion>9.0.8</MicrosoftExtensionsVersion>
+    <MicrosoftExtensionsVersion>9.0.9</MicrosoftExtensionsVersion>
   </PropertyGroup>
 
   <!--Analyzers-->
@@ -25,7 +25,8 @@
     <PackageVersion Include="Aspire.Hosting.NodeJs" Version="$(AspireVersion)" />
     <PackageVersion Include="Aspire.Hosting.MySql" Version="$(AspireVersion)" />
 
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.9" />
 
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(MicrosoftExtensionsVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="$(MicrosoftExtensionsVersion)" />
