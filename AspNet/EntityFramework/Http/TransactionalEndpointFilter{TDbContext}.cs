@@ -1,4 +1,4 @@
-﻿namespace RaptorUtils.AspNet.EntityFramework;
+﻿namespace RaptorUtils.AspNet.EntityFramework.Http;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
