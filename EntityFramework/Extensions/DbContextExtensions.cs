@@ -22,12 +22,16 @@ public static class DbContextExtensions
     /// <param name="dbContext">The database context.</param>
     /// <param name="collection">The collection to synchronize.</param>
     /// <param name="requestedIds">The IDs that should be present in the collection.</param>
+    /// <param name="queryCustomizer">
+    /// An optional function to customize the query used to fetch missing entities, e.g., adding includes.
+    /// </param>
     /// <param name="paramName">The parameter name for validation error reporting.</param>
     /// <returns>A <see cref="ValidationResult"/> indicating success or failure (contained invalid IDs).</returns>
     public static async Task<ValidationResult> TrySyncCollection<T, TId>(
         this DbContext dbContext,
         IList<T> collection,
         IReadOnlyList<TId> requestedIds,
+        Func<IQueryable<T>, IQueryable<T>>? queryCustomizer = null,
         [CallerArgumentExpression(nameof(requestedIds))] string paramName = null!)
         where T : class, IIdentifiable<TId>
         where TId : notnull
@@ -38,8 +42,14 @@ public static class DbContextExtensions
 
         var missingIds = requestedIds.Except(currentIds).ToList();
 
-        var missingEntities = await dbContext.Set<T>()
-            .AsTracking()
+        IQueryable<T> query = dbContext.Set<T>().AsTracking();
+
+        if (queryCustomizer is not null)
+        {
+            query = queryCustomizer(query);
+        }
+
+        var missingEntities = await query
             .Where(e => missingIds.Contains(e.Id))
             .ToListAsync();
 
