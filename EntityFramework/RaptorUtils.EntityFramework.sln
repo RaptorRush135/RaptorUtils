@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35521.163 d17.12
+VisualStudioVersion = 17.12.35521.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaptorUtils.EntityFramework", "RaptorUtils.EntityFramework.csproj", "{F26EC563-89E6-4E76-A3E8-B0F7384314C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaptorUtils.Core", "..\Core\RaptorUtils.Core.csproj", "{A9ADE4C7-26C7-B287-CDD9-8C1A132A2AFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F26EC563-89E6-4E76-A3E8-B0F7384314C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F26EC563-89E6-4E76-A3E8-B0F7384314C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F26EC563-89E6-4E76-A3E8-B0F7384314C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9ADE4C7-26C7-B287-CDD9-8C1A132A2AFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9ADE4C7-26C7-B287-CDD9-8C1A132A2AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9ADE4C7-26C7-B287-CDD9-8C1A132A2AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9ADE4C7-26C7-B287-CDD9-8C1A132A2AFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

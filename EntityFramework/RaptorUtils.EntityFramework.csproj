@@ -4,4 +4,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Core\RaptorUtils.Core.csproj" />
+  </ItemGroup>
+
 </Project>
