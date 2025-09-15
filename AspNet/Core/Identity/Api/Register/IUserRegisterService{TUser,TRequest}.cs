@@ -13,6 +13,14 @@ public interface IUserRegisterService<TUser, TRequest>
     where TUser : class
 {
     /// <summary>
+    /// Creates a generic error result for a failed user registration attempt.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="UserIdentityResult{TUser}"/> representing a failed registration.
+    /// </returns>
+    UserIdentityResult<TUser> GenericError();
+
+    /// <summary>
     /// Attempts to register a new user using the provided registration data.
     /// </summary>
     /// <param name="request">

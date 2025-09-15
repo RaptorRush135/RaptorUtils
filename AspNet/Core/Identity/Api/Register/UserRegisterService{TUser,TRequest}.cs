@@ -26,9 +26,16 @@ public abstract class UserRegisterService<TUser, TRequest>(
     protected UserManager<TUser> UserManager { get; } = userManager;
 
     /// <inheritdoc />
+    public virtual UserIdentityResult<TUser> GenericError()
+    {
+        return UserIdentityResult<TUser>.Failed(
+            this.UserManager.ErrorDescriber.DefaultError());
+    }
+
+    /// <inheritdoc />
     public virtual async Task<UserIdentityResult<TUser>> Register(TRequest request)
     {
-        TUser user = this.CreateUser(request, out string? password);
+        var (user, password) = await this.CreateUser(request);
 
         IdentityResult result = await (password != null
             ? this.UserManager.CreateAsync(user, password)
@@ -40,17 +47,15 @@ public abstract class UserRegisterService<TUser, TRequest>(
     }
 
     /// <summary>
-    /// Creates a new user instance from the registration request and outputs the password.
-    /// If <paramref name="password"/> is <see langword="null"/>, the user will be created without a password.
+    /// Creates a new user instance from the registration request.
     /// </summary>
     /// <param name="request">
     /// The registration request data.
     /// </param>
-    /// <param name="password">
-    /// The password extracted from the request, or <see langword="null"/> if no password is supplied.
-    /// </param>
     /// <returns>
-    /// A new user instance based on the registration request.
+    /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
+    /// containing a <see cref="UserCreationInfo{TUser}"/> with the new user instance
+    /// and the optional password.
     /// </returns>
-    protected abstract TUser CreateUser(TRequest request, out string? password);
+    protected abstract ValueTask<UserCreationInfo<TUser>> CreateUser(TRequest request);
 }
