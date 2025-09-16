@@ -2,13 +2,16 @@
 
 using Microsoft.AspNetCore.Builder;
 
+using RaptorUtils.Threading.Tasks;
+
 /// <summary>
 /// Represents a plugin for a web application that can be enabled or disabled based on a condition.
 /// </summary>
 /// <param name="isEnabled">
 /// A function that determines if the plugin is enabled.
 /// </param>
-public class WebAppPlugin(Func<WebApplicationBuilder, Task<bool>>? isEnabled)
+public class WebAppPlugin(
+    Func<WebApplicationBuilder, TaskOrValue<bool>>? isEnabled)
 {
     /// <summary>
     /// Executes logic when the application is run.
@@ -16,10 +19,7 @@ public class WebAppPlugin(Func<WebApplicationBuilder, Task<bool>>? isEnabled)
     /// </summary>
     /// <param name="args">The command line arguments passed to the application.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual Task OnRun(string[] args)
-    {
-        return Task.CompletedTask;
-    }
+    public virtual ValueTask OnRun(string[] args) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Determines whether the plugin is enabled based on the provided <see cref="WebApplicationBuilder"/>.
@@ -29,10 +29,7 @@ public class WebAppPlugin(Func<WebApplicationBuilder, Task<bool>>? isEnabled)
     /// A task representing the asynchronous operation,
     /// with a boolean indicating whether the plugin is enabled.
     /// </returns>
-    public virtual Task<bool> IsEnabled(WebApplicationBuilder builder)
-    {
-        return isEnabled?.Invoke(builder) ?? Task.FromResult(true);
-    }
+    public virtual TaskOrValue<bool> IsEnabled(WebApplicationBuilder builder) => isEnabled?.Invoke(builder) ?? true;
 
     /// <summary>
     /// Executes logic after the web application builder has been created.
@@ -40,10 +37,7 @@ public class WebAppPlugin(Func<WebApplicationBuilder, Task<bool>>? isEnabled)
     /// </summary>
     /// <param name="builder">The web application builder that was created.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual Task OnAfterCreateBuilder(WebApplicationBuilder builder)
-    {
-        return Task.CompletedTask;
-    }
+    public virtual ValueTask OnAfterCreateBuilder(WebApplicationBuilder builder) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Executes logic to configure services for the web application.
@@ -51,10 +45,7 @@ public class WebAppPlugin(Func<WebApplicationBuilder, Task<bool>>? isEnabled)
     /// </summary>
     /// <param name="builder">The web application builder for which services are being configured.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual Task OnConfigureServices(WebApplicationBuilder builder)
-    {
-        return Task.CompletedTask;
-    }
+    public virtual ValueTask OnConfigureServices(WebApplicationBuilder builder) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Executes logic after the services have been configured.
@@ -62,10 +53,7 @@ public class WebAppPlugin(Func<WebApplicationBuilder, Task<bool>>? isEnabled)
     /// </summary>
     /// <param name="builder">The web application builder for which services were configured.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual Task OnAfterConfigureServices(WebApplicationBuilder builder)
-    {
-        return Task.CompletedTask;
-    }
+    public virtual ValueTask OnAfterConfigureServices(WebApplicationBuilder builder) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Executes logic to configure the web application.
@@ -73,10 +61,7 @@ public class WebAppPlugin(Func<WebApplicationBuilder, Task<bool>>? isEnabled)
     /// </summary>
     /// <param name="app">The web application being configured.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual Task OnConfigure(WebApplication app)
-    {
-        return Task.CompletedTask;
-    }
+    public virtual ValueTask OnConfigure(WebApplication app) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Executes logic after the web application has been configured.
@@ -84,10 +69,16 @@ public class WebAppPlugin(Func<WebApplicationBuilder, Task<bool>>? isEnabled)
     /// </summary>
     /// <param name="app">The web application that was configured.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual Task OnAfterConfigure(WebApplication app)
-    {
-        return Task.CompletedTask;
-    }
+    public virtual ValueTask OnAfterConfigure(WebApplication app) => ValueTask.CompletedTask;
+
+    /// <summary>
+    /// Executes logic immediately before the web application starts running.
+    /// This method can be overridden to provide specific behavior after the application
+    /// has been fully configured and built, but before <see cref="WebApplication.RunAsync"/> is invoked.
+    /// </summary>
+    /// <param name="app">The web application.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public virtual ValueTask OnBeforeStartup(WebApplication app) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Executes logic when an exception occurs.
@@ -97,18 +88,12 @@ public class WebAppPlugin(Func<WebApplicationBuilder, Task<bool>>? isEnabled)
     /// <returns>
     /// A task representing the asynchronous operation, with an optional integer indicating the exit code.
     /// </returns>
-    public virtual Task<int?> OnException(Exception exception)
-    {
-        return Task.FromResult<int?>(null);
-    }
+    public virtual TaskOrValue<int?> OnException(Exception exception) => (int?)null;
 
     /// <summary>
     /// Executes finalization logic for the plugin.
     /// This method can be overridden to provide specific behavior for cleanup or finalization.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual Task OnFinally()
-    {
-        return Task.CompletedTask;
-    }
+    public virtual ValueTask OnFinally() => ValueTask.CompletedTask;
 }

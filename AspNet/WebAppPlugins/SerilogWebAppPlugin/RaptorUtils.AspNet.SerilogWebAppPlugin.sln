@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.AspNet.SerilogW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.AspNet", "..\..\Core\RaptorUtils.AspNet.csproj", "{8D19500E-4386-4171-9988-CBCAE016E03E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaptorUtils.Core", "..\..\..\Core\RaptorUtils.Core.csproj", "{961B53CF-333A-433B-A842-3E1AA75CB74E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8D19500E-4386-4171-9988-CBCAE016E03E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D19500E-4386-4171-9988-CBCAE016E03E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D19500E-4386-4171-9988-CBCAE016E03E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{961B53CF-333A-433B-A842-3E1AA75CB74E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{961B53CF-333A-433B-A842-3E1AA75CB74E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{961B53CF-333A-433B-A842-3E1AA75CB74E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{961B53CF-333A-433B-A842-3E1AA75CB74E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

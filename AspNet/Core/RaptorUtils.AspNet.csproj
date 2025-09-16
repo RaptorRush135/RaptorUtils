@@ -10,4 +10,8 @@
     <PackageReference Include="System.Linq.Async" PrivateAssets="compile" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\RaptorUtils.Core.csproj" />
+  </ItemGroup>
+
 </Project>

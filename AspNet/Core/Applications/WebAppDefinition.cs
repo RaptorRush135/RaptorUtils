@@ -2,6 +2,8 @@
 
 using Microsoft.AspNetCore.Builder;
 
+using RaptorUtils.Threading.Tasks;
+
 /// <summary>
 /// Provides an abstract definition for configuring and running a web application using the .NET minimal hosting model.
 /// This class includes hooks for configuring services, middleware, and handling exceptions and finalization.
@@ -57,6 +59,7 @@ public abstract class WebAppDefinition
         await this.Configure(app);
         await this.AfterConfigure(app);
 
+        await this.BeforeStartup(app);
         await app.RunAsync();
     }
 
@@ -66,10 +69,7 @@ public abstract class WebAppDefinition
     /// </summary>
     /// <param name="args">The command-line arguments passed to the application.</param>
     /// <returns>The created <see cref="WebApplicationBuilder"/>.</returns>
-    protected virtual WebApplicationBuilder CreateBuilder(string[] args)
-    {
-        return WebApplication.CreateBuilder(args);
-    }
+    protected virtual WebApplicationBuilder CreateBuilder(string[] args) => WebApplication.CreateBuilder(args);
 
     /// <summary>
     /// Hook method called after the application builder is created.
@@ -77,17 +77,14 @@ public abstract class WebAppDefinition
     /// </summary>
     /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual Task AfterCreateBuilder(WebApplicationBuilder builder)
-    {
-        return Task.CompletedTask;
-    }
+    protected virtual ValueTask AfterCreateBuilder(WebApplicationBuilder builder) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Configures services for the application. This method must be implemented in derived classes.
     /// </summary>
     /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance to configure services for.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected abstract Task ConfigureServices(WebApplicationBuilder builder);
+    protected abstract ValueTask ConfigureServices(WebApplicationBuilder builder);
 
     /// <summary>
     /// Hook method called after services have been configured.
@@ -95,10 +92,7 @@ public abstract class WebAppDefinition
     /// </summary>
     /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual Task AfterConfigureServices(WebApplicationBuilder builder)
-    {
-        return Task.CompletedTask;
-    }
+    protected virtual ValueTask AfterConfigureServices(WebApplicationBuilder builder) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Builds the application using the configured <see cref="WebApplicationBuilder"/>.
@@ -106,17 +100,14 @@ public abstract class WebAppDefinition
     /// </summary>
     /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
     /// <returns>The built <see cref="WebApplication"/>.</returns>
-    protected virtual WebApplication Build(WebApplicationBuilder builder)
-    {
-        return builder.Build();
-    }
+    protected virtual WebApplication Build(WebApplicationBuilder builder) => builder.Build();
 
     /// <summary>
     /// Configures the web application's request pipeline. This method must be implemented in derived classes.
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> instance to configure.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected abstract Task Configure(WebApplication app);
+    protected abstract ValueTask Configure(WebApplication app);
 
     /// <summary>
     /// Hook method called after the application has been configured.
@@ -124,10 +115,17 @@ public abstract class WebAppDefinition
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> instance.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual Task AfterConfigure(WebApplication app)
-    {
-        return Task.CompletedTask;
-    }
+    protected virtual ValueTask AfterConfigure(WebApplication app) => ValueTask.CompletedTask;
+
+    /// <summary>
+    /// Hook method called immediately before the application starts running.
+    /// Override this method to add custom logic that should execute after
+    /// the application has been configured and built, but before
+    /// <see cref="WebApplication.RunAsync"/> is invoked.
+    /// </summary>
+    /// <param name="app">The <see cref="WebApplication"/> instance.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    protected virtual ValueTask BeforeStartup(WebApplication app) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Handles any exceptions that occur during the application's execution.
@@ -135,18 +133,12 @@ public abstract class WebAppDefinition
     /// </summary>
     /// <param name="exception">The exception that occurred.</param>
     /// <returns>An integer exit code if handled, or null if the exception should be re-thrown.</returns>
-    protected virtual Task<int?> OnException(Exception exception)
-    {
-        return Task.FromResult<int?>(null);
-    }
+    protected virtual TaskOrValue<int?> OnException(Exception exception) => (int?)null;
 
     /// <summary>
     /// Hook method called after the application has finished running, regardless of whether an exception occurred.
     /// Override this method to add custom finalization logic.
     /// </summary>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual Task OnFinally()
-    {
-        return Task.CompletedTask;
-    }
+    protected virtual ValueTask OnFinally() => ValueTask.CompletedTask;
 }

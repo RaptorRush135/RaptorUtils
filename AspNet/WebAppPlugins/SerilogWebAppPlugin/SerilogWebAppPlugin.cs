@@ -7,6 +7,7 @@ using global::Serilog.Sinks.SystemConsole.Themes;
 using Microsoft.AspNetCore.Builder;
 
 using RaptorUtils.AspNet.Applications;
+using RaptorUtils.Threading.Tasks;
 
 /// <summary>
 /// An abstract base class for implementing a Serilog-based plugin for web applications.
@@ -14,7 +15,7 @@ using RaptorUtils.AspNet.Applications;
 /// </summary>
 /// <inheritdoc/>
 public abstract class SerilogWebAppPlugin(
-    Func<WebApplicationBuilder, Task<bool>>? isEnabled)
+    Func<WebApplicationBuilder, TaskOrValue<bool>>? isEnabled)
     : WebAppPlugin(isEnabled)
 {
     /// <summary>
@@ -26,13 +27,13 @@ public abstract class SerilogWebAppPlugin(
     /// Executes when the web application is run. Initializes the logger and logs  the start of the application.
     /// </summary>
     /// <inheritdoc/>
-    public override Task OnRun(string[] args)
+    public override ValueTask OnRun(string[] args)
     {
         Log.Logger = this.CreateBootstrapLogger();
 
         Log.Information("Starting web application");
 
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>
@@ -40,53 +41,53 @@ public abstract class SerilogWebAppPlugin(
     /// and configures Serilog logging.
     /// </summary>
     /// <inheritdoc/>
-    public override Task OnAfterCreateBuilder(WebApplicationBuilder builder)
+    public override ValueTask OnAfterCreateBuilder(WebApplicationBuilder builder)
     {
         Log.Information("Environment: {Environment}", builder.Environment.EnvironmentName);
 
         builder.Services.AddSerilog(this.ConfigureLogger);
 
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>
     /// Executes to configure application services. Logs the configuration process.
     /// </summary>
     /// <inheritdoc/>
-    public override Task OnConfigureServices(WebApplicationBuilder builder)
+    public override ValueTask OnConfigureServices(WebApplicationBuilder builder)
     {
         Log.Information("Configuring services");
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>
     /// Executes after services are configured. Logs the total number of services registered.
     /// </summary>
     /// <inheritdoc/>
-    public override Task OnAfterConfigureServices(WebApplicationBuilder builder)
+    public override ValueTask OnAfterConfigureServices(WebApplicationBuilder builder)
     {
         Log.Information("Total services: {Count}", builder.Services.Count);
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>
     /// Executes to configure the web application. Logs the configuration process.
     /// </summary>
     /// <inheritdoc/>
-    public override Task OnConfigure(WebApplication app)
+    public override ValueTask OnConfigure(WebApplication app)
     {
         Log.Information("Configuring app");
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>
     /// Executes after the application is configured. Logs the start of the application.
     /// </summary>
     /// <inheritdoc/>
-    public override Task OnAfterConfigure(WebApplication app)
+    public override ValueTask OnAfterConfigure(WebApplication app)
     {
         Log.Information("Starting app");
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>
@@ -94,10 +95,10 @@ public abstract class SerilogWebAppPlugin(
     /// Logs the exception and returns an exit code of 1.
     /// </summary>
     /// <inheritdoc/>
-    public override Task<int?> OnException(Exception exception)
+    public override TaskOrValue<int?> OnException(Exception exception)
     {
         Log.Fatal(exception, "Application terminated unexpectedly");
-        return Task.FromResult<int?>(1);
+        return 1;
     }
 
     /// <summary>
@@ -105,10 +106,10 @@ public abstract class SerilogWebAppPlugin(
     /// Flushes the logs and ensures all log entries are written.
     /// </summary>
     /// <returns>A task representing the asynchronous operation of finalizing logging.</returns>
-    public override async Task OnFinally()
+    public override ValueTask OnFinally()
     {
         Log.Information("Flushing logs...");
-        await Log.CloseAndFlushAsync();
+        return Log.CloseAndFlushAsync();
     }
 
     /// <summary>
