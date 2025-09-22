@@ -24,7 +24,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 /// <param name="mappingHints">
 /// Optional <see cref="ConverterMappingHints"/> to influence conversion behavior.
 /// </param>
-public class CollectionToJsonConverter<TCollection, TItem>(
+public sealed class CollectionToJsonConverter<TCollection, TItem>(
     JsonSerializerOptions? serializeOptions = null,
     JsonSerializerOptions? deserializeOptions = null,
     ConverterMappingHints? mappingHints = null)
