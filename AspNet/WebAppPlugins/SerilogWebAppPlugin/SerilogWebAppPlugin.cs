@@ -5,9 +5,12 @@ using global::Serilog.Events;
 using global::Serilog.Sinks.SystemConsole.Themes;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Logging;
 
 using RaptorUtils.AspNet.Applications;
 using RaptorUtils.Threading.Tasks;
+
+using ISerilogLogger = global::Serilog.ILogger;
 
 /// <summary>
 /// An abstract base class for implementing a Serilog-based plugin for web applications.
@@ -45,7 +48,7 @@ public abstract class SerilogWebAppPlugin(
     {
         Log.Information("Environment: {Environment}", builder.Environment.EnvironmentName);
 
-        builder.Services.AddSerilog(this.ConfigureLogger);
+        builder.Services.AddSerilog(this.ConfigureLogger, preserveStaticLogger: true);
 
         return ValueTask.CompletedTask;
     }
@@ -76,7 +79,7 @@ public abstract class SerilogWebAppPlugin(
     /// <inheritdoc/>
     public override ValueTask OnConfigure(WebApplication app)
     {
-        Log.Information("Configuring app");
+        app.Logger.LogInformation("Configuring app");
         return ValueTask.CompletedTask;
     }
 
@@ -86,7 +89,7 @@ public abstract class SerilogWebAppPlugin(
     /// <inheritdoc/>
     public override ValueTask OnAfterConfigure(WebApplication app)
     {
-        Log.Information("Starting app");
+        app.Logger.LogInformation("Starting app");
         return ValueTask.CompletedTask;
     }
 
@@ -95,9 +98,17 @@ public abstract class SerilogWebAppPlugin(
     /// Logs the exception and returns an exit code of 1.
     /// </summary>
     /// <inheritdoc/>
-    public override TaskOrValue<int?> OnException(Exception exception)
+    public override TaskOrValue<int?> OnException(Exception exception, WebApplication? app)
     {
-        Log.Fatal(exception, "Application terminated unexpectedly");
+        if (app != null)
+        {
+            app.Logger.LogInformation(exception, "Application terminated unexpectedly");
+        }
+        else
+        {
+            Log.Fatal(exception, "Application terminated unexpectedly");
+        }
+
         return 1;
     }
 
@@ -105,10 +116,18 @@ public abstract class SerilogWebAppPlugin(
     /// Executes during the finalization of the application lifecycle.
     /// Flushes the logs and ensures all log entries are written.
     /// </summary>
-    /// <returns>A task representing the asynchronous operation of finalizing logging.</returns>
-    public override ValueTask OnFinally()
+    /// <inheritdoc/>
+    public override ValueTask OnFinally(WebApplication? app)
     {
-        Log.Information("Flushing logs...");
+        if (app != null)
+        {
+            app.Logger.LogInformation("Flushing logs...");
+        }
+        else
+        {
+            Log.Information("Flushing logs...");
+        }
+
         return Log.CloseAndFlushAsync();
     }
 
@@ -116,8 +135,8 @@ public abstract class SerilogWebAppPlugin(
     /// Creates the initial bootstrap logger configuration. Can be overridden by derived classes
     /// to customize the logger settings.
     /// </summary>
-    /// <returns>An instance of <see cref="ILogger"/> configured for the application.</returns>
-    protected virtual ILogger CreateBootstrapLogger()
+    /// <returns>An instance of <see cref="ISerilogLogger"/> configured for the application.</returns>
+    protected virtual ISerilogLogger CreateBootstrapLogger()
     {
         return new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)

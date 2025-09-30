@@ -10,6 +10,8 @@ using RaptorUtils.Threading.Tasks;
 /// </summary>
 public abstract class WebAppDefinition
 {
+    private WebApplication? application;
+
     /// <summary>
     /// Runs the web application with the specified arguments.
     /// Handles the entire lifecycle, including exception handling and finalization logic.
@@ -24,7 +26,7 @@ public abstract class WebAppDefinition
         }
         catch (Exception ex)
         {
-            if (await this.OnException(ex) is { } exitCode)
+            if (await this.OnException(ex, this.application) is { } exitCode)
             {
                 return exitCode;
             }
@@ -33,7 +35,7 @@ public abstract class WebAppDefinition
         }
         finally
         {
-            await this.OnFinally();
+            await this.OnFinally(this.application);
         }
 
         return 0;
@@ -55,6 +57,7 @@ public abstract class WebAppDefinition
         await this.AfterConfigureServices(builder);
 
         var app = builder.Build();
+        this.application = app;
 
         await this.Configure(app);
         await this.AfterConfigure(app);
@@ -132,13 +135,21 @@ public abstract class WebAppDefinition
     /// Override this method to customize exception handling behavior.
     /// </summary>
     /// <param name="exception">The exception that occurred.</param>
+    /// <param name="app">
+    /// The <see cref="WebApplication"/> instance,
+    /// or <see langword="null"/> if the application could not be fully constructed.
+    /// </param>
     /// <returns>An integer exit code if handled, or null if the exception should be re-thrown.</returns>
-    protected virtual TaskOrValue<int?> OnException(Exception exception) => (int?)null;
+    protected virtual TaskOrValue<int?> OnException(Exception exception, WebApplication? app) => (int?)null;
 
     /// <summary>
     /// Hook method called after the application has finished running, regardless of whether an exception occurred.
     /// Override this method to add custom finalization logic.
     /// </summary>
+    /// <param name="app">
+    /// The <see cref="WebApplication"/> instance,
+    /// or <see langword="null"/> if the application could not be fully constructed.
+    /// </param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual ValueTask OnFinally() => ValueTask.CompletedTask;
+    protected virtual ValueTask OnFinally(WebApplication? app) => ValueTask.CompletedTask;
 }

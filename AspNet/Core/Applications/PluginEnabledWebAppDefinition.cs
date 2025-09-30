@@ -97,15 +97,15 @@ public abstract class PluginEnabledWebAppDefinition : WebAppDefinition
     /// <summary>
     /// Handles exceptions that occur during the application's execution by invoking each plugin's exception handler.
     /// </summary>
-    /// <param name="exception">The exception that occurred.</param>
     /// <returns>An integer exit code if handled by a plugin, or null if the exception should be re-thrown.</returns>
-    protected override async TaskOrValue<int?> OnException(Exception exception)
+    /// <inheritdoc/>
+    protected override async TaskOrValue<int?> OnException(Exception exception, WebApplication? app)
     {
         int? exitCode = null;
 
         foreach (var plugin in this.Plugins)
         {
-            exitCode ??= await plugin.OnException(exception);
+            exitCode ??= await plugin.OnException(exception, app);
         }
 
         return exitCode;
@@ -115,9 +115,9 @@ public abstract class PluginEnabledWebAppDefinition : WebAppDefinition
     /// Hook method called after the application has finished running,
     /// allowing plugins to perform cleanup or finalization.
     /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    protected override ValueTask OnFinally()
-        => this.InvokePlugins(p => p.OnFinally());
+    /// <inheritdoc/>
+    protected override ValueTask OnFinally(WebApplication? app)
+        => this.InvokePlugins(p => p.OnFinally(app));
 
     /// <summary>
     /// Invokes a specified function on each plugin in the collection.

@@ -85,15 +85,23 @@ public class WebAppPlugin(
     /// This method can be overridden to provide specific exception handling behavior.
     /// </summary>
     /// <param name="exception">The exception that occurred.</param>
+    /// <param name="app">
+    /// The <see cref="WebApplication"/> instance,
+    /// or <see langword="null"/> if the application could not be fully constructed.
+    /// </param>
     /// <returns>
     /// A task representing the asynchronous operation, with an optional integer indicating the exit code.
     /// </returns>
-    public virtual TaskOrValue<int?> OnException(Exception exception) => (int?)null;
+    public virtual TaskOrValue<int?> OnException(Exception exception, WebApplication? app) => (int?)null;
 
     /// <summary>
     /// Executes finalization logic for the plugin.
     /// This method can be overridden to provide specific behavior for cleanup or finalization.
     /// </summary>
+    /// <param name="app">
+    /// The <see cref="WebApplication"/> instance,
+    /// or <see langword="null"/> if the application could not be fully constructed.
+    /// </param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual ValueTask OnFinally() => ValueTask.CompletedTask;
+    public virtual ValueTask OnFinally(WebApplication? app) => ValueTask.CompletedTask;
 }
