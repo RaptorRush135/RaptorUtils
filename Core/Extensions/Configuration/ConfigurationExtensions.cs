@@ -98,6 +98,75 @@ public static class ConfigurationExtensions
             ?? throw new InvalidOperationException($"Required connection string '{name}' not found.");
     }
 
+    /// <summary>
+    /// Retrieves the value of a service endpoint from configuration.
+    /// <para>
+    /// Follows the .NET Aspire convention for service endpoint keys:
+    /// <c>services__{serviceName}__{endpointName}__{index}</c>.
+    /// </para>
+    /// </summary>
+    /// <param name="configuration">The configuration object to query.</param>
+    /// <param name="serviceName">The name of the service.</param>
+    /// <param name="endpointName">The name of the endpoint within the service.</param>
+    /// <param name="index">
+    /// The zero-based index of the endpoint.
+    /// Defaults to 0 for the first endpoint.
+    /// </param>
+    /// <returns>
+    /// The endpoint value if found; otherwise <see langword="null"/>.
+    /// </returns>
+    public static string? GetServiceEndpoint(
+        this IConfiguration configuration,
+        string serviceName,
+        string endpointName,
+        int index = 0)
+    {
+        string key = GetServiceEndpointKey(serviceName, endpointName, index);
+        return configuration[key];
+    }
+
+    /// <summary>
+    /// Retrieves the value of a required service endpoint from configuration.
+    /// <para>
+    /// Follows the .NET Aspire convention for service endpoint keys:
+    /// <c>services__{serviceName}__{endpointName}__{index}</c>.
+    /// </para>
+    /// </summary>
+    /// <param name="configuration">The configuration object to query.</param>
+    /// <param name="serviceName">The name of the service.</param>
+    /// <param name="endpointName">The name of the endpoint within the service.</param>
+    /// <param name="index">
+    /// The zero-based index of the endpoint.
+    /// Defaults to 0 for the first endpoint.
+    /// </param>
+    /// <returns>The endpoint value.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if the endpoint value is not found in the configuration.
+    /// </exception>
+    public static string GetRequiredServiceEndpoint(
+        this IConfiguration configuration,
+        string serviceName,
+        string endpointName,
+        int index = 0)
+    {
+        string key = GetServiceEndpointKey(serviceName, endpointName, index);
+        return configuration[key]
+            ?? throw KeyNotFoundException(key);
+    }
+
+    [Pure]
+    private static string GetServiceEndpointKey(
+        string serviceName,
+        string endpointName,
+        int index = 0)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(serviceName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(endpointName);
+        ArgumentOutOfRangeException.ThrowIfNegative(0);
+
+        return $"services:{serviceName}:{endpointName}:{index}";
+    }
+
     [Pure]
     private static InvalidOperationException BindException<T>()
         => new($"Configuration could not be bound to type {typeof(T).FullName}.");
