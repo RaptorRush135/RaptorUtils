@@ -37,11 +37,7 @@ public abstract class UserLoginService<TUser, TRequest, TOptions>(
 
         var context = flow.Context.Value;
 
-        var signInResult = await signInManager.PasswordSignInAsync(
-            context.User,
-            context.Password,
-            context.IsPersistent,
-            context.LockoutOnFailure);
+        var signInResult = await this.SignIn(context);
 
         return LoginResult<TUser>.FromSignIn(signInResult, context.User);
     }
@@ -61,4 +57,27 @@ public abstract class UserLoginService<TUser, TRequest, TOptions>(
     /// containing a <see cref="SignInFlowResult{TUser}"/> result.
     /// </returns>
     protected abstract Task<SignInFlowResult<TUser>> SignInFlow(TRequest request, TOptions options);
+
+    /// <summary>
+    /// Signs in a user using the provided sign-in context.
+    /// </summary>
+    /// This method uses the <see cref="SignInManager{TUser}.PasswordSignInAsync(TUser, string, bool, bool)"/> method
+    /// to perform the sign-in operation.
+    /// Override this method to customize the sign-in behavior.
+    /// <param name="context">
+    /// The sign-in context containing the user, password, and additional sign-in options.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The task result contains a  <see cref="SignInResult"/>
+    /// indicating the outcome of the sign-in attempt.
+    /// </returns>
+    protected virtual Task<SignInResult> SignIn(SignInContext<TUser> context)
+    {
+        return signInManager.PasswordSignInAsync(
+            context.User,
+            context.Password,
+            context.IsPersistent,
+            context.LockoutOnFailure);
+    }
 }
