@@ -25,6 +25,11 @@ public abstract class UserLoginService<TUser, TRequest, TOptions>(
     : IUserLoginService<TUser, TRequest, TOptions>
     where TUser : class
 {
+    /// <summary>
+    /// Gets the <see cref="SignInManager{TUser}"/> instance used to perform sign-in operations.
+    /// </summary>
+    protected SignInManager<TUser> SignInManager { get; } = signInManager;
+
     /// <inheritdoc />
     public virtual async Task<LoginResult<TUser>> Login(TRequest request, TOptions options)
     {
@@ -74,7 +79,7 @@ public abstract class UserLoginService<TUser, TRequest, TOptions>(
     /// </returns>
     protected virtual Task<SignInResult> SignIn(SignInContext<TUser> context)
     {
-        return signInManager.PasswordSignInAsync(
+        return this.SignInManager.PasswordSignInAsync(
             context.User,
             context.Password,
             context.IsPersistent,
