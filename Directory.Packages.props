@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AspireVersion>9.5.0</AspireVersion>
+    <AspireVersion>9.5.1</AspireVersion>
     <MicrosoftExtensionsVersion>9.0.9</MicrosoftExtensionsVersion>
   </PropertyGroup>
 
@@ -36,7 +36,7 @@
 
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
 
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.5" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.6" />
     <PackageVersion Include="oqo0.SwaggerThemes" Version="1.4.3" />
 
     <PackageVersion Include="NGuid" Version="1.0.0" />
