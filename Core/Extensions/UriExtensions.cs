@@ -18,6 +18,7 @@ public static class UriExtensions
     /// </param>
     /// <param name="paths">Path segments to append.</param>
     /// <returns>A new <see cref="Uri"/> with the additional path segments appended.</returns>
+    [MustUseReturnValue]
     [PerformanceSensitive]
     public static Uri Append(this Uri uri, bool withTrailingSlash = true, params ReadOnlySpan<string?> paths)
     {

@@ -1,5 +1,7 @@
 ﻿namespace RaptorUtils.Results;
 
+using RaptorUtils.CodeAnalysis;
+
 /// <summary>
 /// Represents the result of a validation operation, including information
 /// about whether the operation succeeded and any associated validation errors.
@@ -53,6 +55,7 @@ public sealed class ValidationResult
     /// <exception cref="InvalidOperationException">
     /// Thrown when the provided errors do not result in a failed state (i.e., no valid errors are provided).
     /// </exception>
+    [MustUseReturnValue]
     public static ValidationResult Failed(
         params IEnumerable<ValidationFailure?> errors)
     {
@@ -100,6 +103,7 @@ public sealed class ValidationResult
     /// <returns>
     /// A dictionary where the keys are property names, and the values are arrays of error messages.
     /// </returns>
+    [MustUseReturnValue]
     public Dictionary<string, string[]> ToDictionary()
     {
         return this.Errors

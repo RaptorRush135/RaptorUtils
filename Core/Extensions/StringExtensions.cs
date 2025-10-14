@@ -1,5 +1,7 @@
 ﻿namespace RaptorUtils.Extensions;
 
+using RaptorUtils.CodeAnalysis;
+
 /// <summary>
 /// Provides extension methods for <see cref="string"/>.
 /// </summary>
@@ -29,6 +31,7 @@ public static class StringExtensions
     /// <exception cref="InvalidOperationException">
     /// Thrown when <paramref name="str"/> does not end with the specified <paramref name="suffix"/>.
     /// </exception>
+    [MustUseReturnValue]
     public static string RemoveRequiredSuffix(
         this string str,
         string suffix,

@@ -1,5 +1,7 @@
 ﻿namespace RaptorUtils.Collections.Extensions;
 
+using RaptorUtils.CodeAnalysis;
+
 /// <summary>
 /// Provides extension methods for arrays.
 /// </summary>
@@ -18,6 +20,7 @@ public static class ArrayExtensions
     /// <see langword="true"/> if any elements in the list match the specified condition;
     /// otherwise, <see langword="false"/>.
     /// </returns>
+    [MustUseReturnValue]
     public static bool Any<T>(this T[] array, Func<T, bool> predicate)
     {
         return Array.Exists(array, new Predicate<T>(predicate));

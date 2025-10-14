@@ -1,5 +1,7 @@
 ﻿namespace RaptorUtils.Collections.Extensions;
 
+using RaptorUtils.CodeAnalysis;
+
 /// <summary>
 /// Provides extension methods for lists.
 /// </summary>
@@ -18,6 +20,7 @@ public static class ListExtensions
     /// <see langword="true"/> if any elements in the list match the specified condition;
     /// otherwise, <see langword="false"/>.
     /// </returns>
+    [MustUseReturnValue]
     public static bool Any<T>(this List<T> list, Func<T, bool> predicate)
     {
         return list.Exists(new Predicate<T>(predicate));

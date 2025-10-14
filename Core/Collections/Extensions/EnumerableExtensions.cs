@@ -1,5 +1,7 @@
 ﻿namespace RaptorUtils.Collections.Extensions;
 
+using RaptorUtils.CodeAnalysis;
+
 /// <summary>
 /// Provides extension methods for <see cref="IEnumerable{T}"/>.
 /// </summary>
@@ -14,6 +16,7 @@ public static class EnumerableExtensions
     /// <see langword="true"/> if the source collection contains duplicate elements;
     /// otherwise, <see langword="false"/>.
     /// </returns>
+    [MustUseReturnValue]
     public static bool ContainsDuplicates<T>(this IEnumerable<T> source)
     {
         var valueSet = new HashSet<T>();
