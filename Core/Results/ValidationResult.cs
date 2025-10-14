@@ -1,12 +1,14 @@
 ﻿namespace RaptorUtils.Results;
 
+using System.Collections;
+
 using RaptorUtils.CodeAnalysis;
 
 /// <summary>
 /// Represents the result of a validation operation, including information
 /// about whether the operation succeeded and any associated validation errors.
 /// </summary>
-public sealed class ValidationResult
+public sealed class ValidationResult : IEnumerable<KeyValuePair<string, string[]>>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ValidationResult"/> class with the specified errors.
@@ -112,4 +114,16 @@ public sealed class ValidationResult
                 g => g.Key,
                 g => g.Select(x => x.ErrorMessage).ToArray());
     }
+
+    /// <summary>
+    /// Returns an enumerator that iterates through the validation errors as key-value pairs,
+    /// where keys are property names and values are arrays of error messages.
+    /// </summary>
+    /// <returns>
+    /// An enumerator that can be used to iterate through the validation errors dictionary.
+    /// </returns>
+    public IEnumerator<KeyValuePair<string, string[]>> GetEnumerator() => this.ToDictionary().GetEnumerator();
+
+    /// <inheritdoc/>
+    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 }
