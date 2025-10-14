@@ -1,5 +1,7 @@
 ﻿namespace RaptorUtils.Threading;
 
+using RaptorUtils.CodeAnalysis;
+
 /// <summary>
 /// Provides an asynchronous lock mechanism that ensures only one task can access a resource at a time.
 /// </summary>
@@ -22,6 +24,7 @@ public class AsyncLock
     /// A task that represents the asynchronous operation.
     /// The task result is a <see cref="Scope"/> object that releases the lock upon disposal.
     /// </returns>
+    [MustUseReturnValue]
     public async Task<Scope> LockAsync()
     {
         await this.semaphore.WaitAsync();

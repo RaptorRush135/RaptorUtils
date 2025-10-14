@@ -16,6 +16,7 @@
     <PackageVersion Include="StyleCop.Analyzers.Unstable" Version="1.2.*" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.*" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.*" />
+    <PackageVersion Include="MustUseRetVal" Version="0.0.2" />
   </ItemGroup>
 
   <!--Packages-->

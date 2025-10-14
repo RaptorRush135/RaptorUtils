@@ -2,6 +2,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+using RaptorUtils.CodeAnalysis;
+
 /// <summary>
 /// Represents the result of an operation that can succeed with a value of type <typeparamref name="T"/>
 /// or fail with an error message.
@@ -39,7 +41,10 @@ public readonly record struct Result<T>
     /// </summary>
     /// <param name="error">The error message describing the failure.</param>
     /// <returns>A failed <see cref="Result{T}"/> instance.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if <paramref name="error"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown if <paramref name="error"/> is <see langword="null"/>.
+    /// </exception>
+    [MustUseReturnValue]
     public static Result<T> Fail(string error) => new()
     {
         Error = error

@@ -1,5 +1,7 @@
 ﻿namespace RaptorUtils.Extensions;
 
+using RaptorUtils.CodeAnalysis;
+
 /// <summary>
 /// Provides extension methods for <see cref="ReadOnlySpan{T}"/>.
 /// </summary>
@@ -20,6 +22,7 @@ public static class ReadOnlySpanExtensions
     /// <exception cref="InvalidOperationException">
     /// Thrown when <paramref name="str"/> does not end with the specified <paramref name="suffix"/>.
     /// </exception>
+    [MustUseReturnValue]
     public static ReadOnlySpan<char> RemoveRequiredSuffix(
         this ReadOnlySpan<char> str,
         ReadOnlySpan<char> suffix,

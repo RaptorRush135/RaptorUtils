@@ -1,8 +1,8 @@
 ﻿namespace RaptorUtils.Extensions.Configuration;
 
-using System.Diagnostics.Contracts;
-
 using Microsoft.Extensions.Configuration;
+
+using RaptorUtils.CodeAnalysis;
 
 /// <summary>
 /// Provides extension methods for simplifying common configuration access patterns.
@@ -19,6 +19,7 @@ public static class ConfigurationExtensions
     /// <exception cref="InvalidOperationException">
     /// Thrown if the configuration could not be bound to the specified type.
     /// </exception>
+    [MustUseReturnValue]
     public static T GetRequired<T>(this IConfiguration configuration)
         where T : class
     {
@@ -42,6 +43,7 @@ public static class ConfigurationExtensions
     /// <exception cref="InvalidOperationException">
     /// Thrown if the <paramref name="key"/> is not found.
     /// </exception>
+    [MustUseReturnValue]
     public static string GetRequiredValue(this IConfiguration configuration, string key)
     {
         ArgumentNullException.ThrowIfNull(configuration);
@@ -62,6 +64,7 @@ public static class ConfigurationExtensions
     /// Thrown if the <paramref name="key"/> is not found
     /// or if the configuration could not be bound to the specified type.
     /// </exception>
+    [MustUseReturnValue]
     public static T GetRequiredValue<T>(this IConfiguration configuration, string key)
     {
         ArgumentNullException.ThrowIfNull(configuration);
@@ -89,6 +92,7 @@ public static class ConfigurationExtensions
     /// <exception cref="InvalidOperationException">
     /// Thrown if the connection string is not found.
     /// </exception>
+    [MustUseReturnValue]
     public static string GetRequiredConnectionString(this IConfiguration configuration, string name)
     {
         ArgumentNullException.ThrowIfNull(configuration);
@@ -115,6 +119,7 @@ public static class ConfigurationExtensions
     /// <returns>
     /// The endpoint value if found; otherwise <see langword="null"/>.
     /// </returns>
+    [MustUseReturnValue]
     public static string? GetServiceEndpoint(
         this IConfiguration configuration,
         string serviceName,
@@ -143,6 +148,7 @@ public static class ConfigurationExtensions
     /// <exception cref="InvalidOperationException">
     /// Thrown if the endpoint value is not found in the configuration.
     /// </exception>
+    [MustUseReturnValue]
     public static string GetRequiredServiceEndpoint(
         this IConfiguration configuration,
         string serviceName,
@@ -154,7 +160,7 @@ public static class ConfigurationExtensions
             ?? throw KeyNotFoundException(key);
     }
 
-    [Pure]
+    [MustUseReturnValue]
     private static string GetServiceEndpointKey(
         string serviceName,
         string endpointName,
@@ -167,11 +173,11 @@ public static class ConfigurationExtensions
         return $"services:{serviceName}:{endpointName}:{index}";
     }
 
-    [Pure]
+    [MustUseReturnValue]
     private static InvalidOperationException BindException<T>()
         => new($"Configuration could not be bound to type {typeof(T).FullName}.");
 
-    [Pure]
+    [MustUseReturnValue]
     private static InvalidOperationException KeyNotFoundException(string key)
        => new($"Required key '{key}' not found.");
 }
