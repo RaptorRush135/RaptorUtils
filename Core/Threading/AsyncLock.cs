@@ -1,4 +1,5 @@
 ﻿namespace RaptorUtils.Threading;
+
 /// <summary>
 /// Provides an asynchronous lock mechanism that ensures only one task can access a resource at a time.
 /// </summary>
