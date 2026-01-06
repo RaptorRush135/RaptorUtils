@@ -258,6 +258,9 @@ dotnet_diagnostic.SA1601.severity = suggestion
 dotnet_diagnostic.SA1602.severity = suggestion
 dotnet_diagnostic.SA1633.severity = none
 
+# Sonar
+dotnet_diagnostic.S1172.severity = none # False positives, use IDE0060 & RCS1163
+
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4
