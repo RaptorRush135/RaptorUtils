@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using RaptorUtils.AspNet.Applications;
 using RaptorUtils.Threading.Tasks;
 
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 using ISerilogLogger = global::Serilog.ILogger;
 
 /// <summary>
@@ -94,20 +95,26 @@ public abstract class SerilogWebAppPlugin(
     }
 
     /// <summary>
-    /// Executes when an exception occurs during the application lifecycle.
-    /// Logs the exception and returns an exit code of 1.
+    /// Invoked when an unhandled exception occurs during the application lifecycle.
+    /// Executes registered exception handlers in order, and returns
+    /// the first non-<see langword="null"/> exit code produced by a handler.
+    /// If no handler handles the exception, logs a critical error and returns an exit code of 1.
     /// </summary>
     /// <inheritdoc/>
     public override TaskOrValue<int?> OnException(Exception exception, WebApplication? app)
     {
-        if (app != null)
+        var logger = GetLogger(app);
+
+        foreach (var handler in this.GetExceptionHandlers())
         {
-            app.Logger.LogInformation(exception, "Application terminated unexpectedly");
+            int? result = handler.Invoke(exception, app, logger);
+            if (result is not null)
+            {
+                return result;
+            }
         }
-        else
-        {
-            Log.Fatal(exception, "Application terminated unexpectedly");
-        }
+
+        logger.LogCritical(exception, "Application terminated unexpectedly");
 
         return 1;
     }
@@ -119,15 +126,8 @@ public abstract class SerilogWebAppPlugin(
     /// <inheritdoc/>
     public override ValueTask OnFinally(WebApplication? app)
     {
-        if (app != null)
-        {
-            app.Logger.LogInformation("Flushing logs...");
-        }
-        else
-        {
-            Log.Information("Flushing logs...");
-        }
-
+        var logger = GetLogger(app);
+        logger.LogInformation("Flushing logs...");
         return Log.CloseAndFlushAsync();
     }
 
@@ -152,4 +152,28 @@ public abstract class SerilogWebAppPlugin(
     /// <param name="serviceProvider">The service provider to resolve dependencies for logging configuration.</param>
     /// <param name="options">The logger configuration to modify.</param>
     protected abstract void ConfigureLogger(IServiceProvider serviceProvider, LoggerConfiguration options);
+
+    /// <summary>
+    /// Gets the exception handlers to invoke when an exception occurs.
+    /// Handlers receive the <see cref="Exception"/>, optional <see cref="WebApplication"/>,
+    /// and an <see cref="ILogger"/>, and return a nullable exit code.
+    /// The first non-<see langword="null"/> value is used as the application exit code.
+    /// </summary>
+    /// <returns>
+    /// A collection of exception handler delegates.
+    /// </returns>
+    protected virtual ICollection<Func<Exception, WebApplication?, ILogger, int?>> GetExceptionHandlers() => [];
+
+    private static ILogger GetLogger(WebApplication? app)
+    {
+        return app?.Logger ?? ToMicrosoftLogger(Log.Logger);
+    }
+
+    private static ILogger ToMicrosoftLogger(ISerilogLogger serilogLogger)
+    {
+        var factory = LoggerFactory.Create(
+            builder => builder.AddSerilog(serilogLogger, dispose: false));
+
+        return factory.CreateLogger(string.Empty);
+    }
 }
