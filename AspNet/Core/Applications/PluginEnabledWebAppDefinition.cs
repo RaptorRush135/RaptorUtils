@@ -44,7 +44,7 @@ public abstract class PluginEnabledWebAppDefinition : WebAppDefinition
     {
         this.Plugins = await this.Plugins
             .ToAsyncEnumerable()
-            .WhereAwait(p => p.IsEnabled(builder).UnderlyingTask)
+            .Where((p, _) => p.IsEnabled(builder).UnderlyingTask)
             .ToArrayAsync();
 
         await this.InvokePlugins(p => p.OnAfterCreateBuilder(builder));

@@ -34,11 +34,14 @@ public sealed class StartupTimerWebAppPlugin(
     /// <inheritdoc />
     public override ValueTask OnBeforeStartup(WebApplication app)
     {
-        TimeSpan elapsedTime = Stopwatch.GetElapsedTime(this.startTimestamp);
+        if (app.Logger.IsEnabled(LogLevel.Information))
+        {
+            TimeSpan elapsedTime = Stopwatch.GetElapsedTime(this.startTimestamp);
 
-        app.Logger.LogInformation(
-            "Host startup completed in {ElapsedTime} ms",
-            elapsedTime.Milliseconds);
+            app.Logger.LogInformation(
+                "Host startup completed in {ElapsedTime} ms",
+                elapsedTime.Milliseconds);
+        }
 
         return ValueTask.CompletedTask;
     }

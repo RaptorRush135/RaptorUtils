@@ -6,8 +6,6 @@ using Microsoft.Extensions.Logging;
 
 using RaptorUtils.Threading.Tasks;
 
-using SwaggerThemes;
-
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 /// <summary>
@@ -23,14 +21,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 /// <param name="setupActionProvider">
 /// An optional function that provides a setup action for SwaggerGen options.
 /// </param>
-/// <param name="themeProvider">
-/// An optional function that provides a theme for the Swagger UI.
-/// </param>
 public class SwaggerWebAppPlugin(
     Func<WebApplicationBuilder, TaskOrValue<bool>>? isEnabled = null,
     Action<WebApplicationBuilder>? metadataAction = null,
-    Func<WebApplicationBuilder, Action<SwaggerGenOptions>>? setupActionProvider = null,
-    Func<WebApplication, Theme?>? themeProvider = null)
+    Func<WebApplicationBuilder, Action<SwaggerGenOptions>>? setupActionProvider = null)
     : WebAppPlugin(isEnabled)
 {
     /// <summary>
@@ -60,12 +54,6 @@ public class SwaggerWebAppPlugin(
     public override ValueTask OnConfigure(WebApplication app)
     {
         app.UseSwagger();
-
-        if (themeProvider?.Invoke(app) is { } theme)
-        {
-            app.UseSwaggerUI(theme);
-        }
-
         app.UseSwaggerUI();
 
         app.Logger.LogInformation("Swagger enabled");

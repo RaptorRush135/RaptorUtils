@@ -1,14 +1,15 @@
-﻿namespace RaptorUtils.Aspire.Hosting.NodeJs;
+﻿namespace RaptorUtils.Aspire.Hosting.JavaScript;
 
 using global::Aspire.Hosting;
 using global::Aspire.Hosting.ApplicationModel;
+using global::Aspire.Hosting.JavaScript;
 
 using RaptorUtils.Net;
 
 /// <summary>
-/// Provides extension methods for building <see cref="NodeAppResource"/> resources.
+/// Provides extension methods for building <see cref="JavaScriptAppResource"/> resources.
 /// </summary>
-public static class NodeBuilderExtensions
+public static class JavaScriptBuilderExtensions
 {
     /// <summary>
     /// Configures the resource builder to use a randomly available port.
@@ -16,10 +17,10 @@ public static class NodeBuilderExtensions
     /// </summary>
     /// <param name="builder">The resource builder to extend.</param>
     /// <returns>
-    /// An updated instance of <see cref="IResourceBuilder{NodeAppResource}"/>
+    /// An updated instance of <see cref="IResourceBuilder{JavaScriptAppResource}"/>
     /// configured with a random port.</returns>
-    public static IResourceBuilder<NodeAppResource> WithRandomPort(
-        this IResourceBuilder<NodeAppResource> builder)
+    public static IResourceBuilder<JavaScriptAppResource> WithRandomPort(
+        this IResourceBuilder<JavaScriptAppResource> builder)
     {
         int port = PortFinder.GetAvailablePort();
 
@@ -33,10 +34,10 @@ public static class NodeBuilderExtensions
     /// <param name="builder">The resource builder to extend.</param>
     /// <param name="port">The port number to assign to the resource.</param>
     /// <returns>
-    /// An updated instance of <see cref="IResourceBuilder{NodeAppResource}"/> configured with the specified port.
+    /// An updated instance of <see cref="IResourceBuilder{JavaScriptAppResource}"/> configured with the specified port.
     /// </returns>
-    public static IResourceBuilder<NodeAppResource> WithPort(
-        this IResourceBuilder<NodeAppResource> builder,
+    public static IResourceBuilder<JavaScriptAppResource> WithPort(
+        this IResourceBuilder<JavaScriptAppResource> builder,
         int port)
     {
         return builder

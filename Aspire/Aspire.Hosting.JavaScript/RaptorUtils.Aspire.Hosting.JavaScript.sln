@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.Aspire.Hosting.NodeJs", "RaptorUtils.Aspire.Hosting.NodeJs.csproj", "{061EEC48-C73E-41C5-AA68-75360451B0C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.Aspire.Hosting.JavaScript", "RaptorUtils.Aspire.Hosting.JavaScript.csproj", "{061EEC48-C73E-41C5-AA68-75360451B0C2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaptorUtils.Aspire.Hosting", "..\Aspire.Hosting\RaptorUtils.Aspire.Hosting.csproj", "{BA261E49-4D82-4436-AB0F-C791A9BE69B0}"
 EndProject

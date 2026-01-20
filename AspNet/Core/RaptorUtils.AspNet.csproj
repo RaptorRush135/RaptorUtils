@@ -6,8 +6,6 @@
     <PackageReference Include="NGuid" PrivateAssets="compile" />
 
     <PackageReference Include="Serilog.AspNetCore" />
-
-    <PackageReference Include="System.Linq.Async" PrivateAssets="compile" />
   </ItemGroup>
 
   <ItemGroup>
