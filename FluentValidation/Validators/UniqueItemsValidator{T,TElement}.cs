@@ -17,7 +17,7 @@ public class UniqueItemsValidator<T, TElement>
     /// Gets the name of the validator.
     /// This is used as the default Error Code for the validator.
     /// </summary>
-    public override string Name => nameof(UniqueItemsValidator<T, TElement>);
+    public override string Name => nameof(UniqueItemsValidator<,>);
 
     /// <inheritdoc/>
     public override bool IsValid(ValidationContext<T> context, IEnumerable<TElement> collection)
