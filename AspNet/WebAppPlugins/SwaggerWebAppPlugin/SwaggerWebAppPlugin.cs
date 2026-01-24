@@ -21,10 +21,16 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 /// <param name="setupActionProvider">
 /// An optional function that provides a setup action for SwaggerGen options.
 /// </param>
+/// <param name="onConfigure">
+/// An optional action invoked during application configuration time.
+/// Can be used to register additional middleware or perform runtime configuration
+/// before `UseSwagger` &amp; `UseSwaggerUI` are applied.
+/// </param>
 public class SwaggerWebAppPlugin(
     Func<WebApplicationBuilder, TaskOrValue<bool>>? isEnabled = null,
     Action<WebApplicationBuilder>? metadataAction = null,
-    Func<WebApplicationBuilder, Action<SwaggerGenOptions>>? setupActionProvider = null)
+    Func<WebApplicationBuilder, Action<SwaggerGenOptions>>? setupActionProvider = null,
+    Action<WebApplication>? onConfigure = null)
     : WebAppPlugin(isEnabled)
 {
     /// <summary>
@@ -53,10 +59,12 @@ public class SwaggerWebAppPlugin(
     /// <inheritdoc/>
     public override ValueTask OnConfigure(WebApplication app)
     {
+        onConfigure?.Invoke(app);
+
         app.UseSwagger();
         app.UseSwaggerUI();
 
-        app.Logger.LogInformation("Swagger enabled");
+        app.Logger.LogWarning("Swagger enabled");
 
         return ValueTask.CompletedTask;
     }
