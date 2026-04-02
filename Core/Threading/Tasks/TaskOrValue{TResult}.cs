@@ -20,7 +20,7 @@ public readonly struct TaskOrValue<TResult>(
     public ValueTask<TResult> UnderlyingTask { get; } = task;
 
     public static implicit operator TaskOrValue<TResult>(TResult value)
-        => new(ValueTask.FromResult(value));
+        => FromResult(value);
 
     public static implicit operator TaskOrValue<TResult>(ValueTask<TResult> task)
         => new(task);
@@ -30,6 +30,14 @@ public readonly struct TaskOrValue<TResult>(
 
     public static bool operator !=(TaskOrValue<TResult> left, TaskOrValue<TResult> right)
         => left.UnderlyingTask != right.UnderlyingTask;
+
+    /// <summary>
+    /// Creates a completed <see cref="TaskOrValue{TResult}"/> that contains the specified result.
+    /// </summary>
+    /// <param name="value">The result value to store in the completed <see cref="TaskOrValue{TResult}"/>.</param>
+    /// <returns>A <see cref="TaskOrValue{TResult}"/>that is completed successfully with the specified result.</returns>
+    public static TaskOrValue<TResult> FromResult(TResult value)
+        => new(ValueTask.FromResult(value));
 
     /// <summary>
     /// Gets an awaiter for this <see cref="TaskOrValue{TResult}"/>.
