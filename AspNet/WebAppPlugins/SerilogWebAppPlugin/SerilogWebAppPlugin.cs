@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
 
 using RaptorUtils.AspNet.Applications;
+using RaptorUtils.AspNet.Logging;
 using RaptorUtils.Threading.Tasks;
 
 using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -28,26 +29,14 @@ public abstract class SerilogWebAppPlugin(
     public virtual ConsoleTheme? ConsoleTheme { get; }
 
     /// <summary>
-    /// Executes when the web application is run. Initializes the logger and logs  the start of the application.
+    /// Executes after the web application builder is created.
+    /// Logs the current environment and configures Serilog logging.
     /// </summary>
     /// <inheritdoc/>
-    public override ValueTask OnRun(string[] args)
+    public override ValueTask OnAfterCreateBuilder(WebApplicationBuilder builder, ILogger logger)
     {
-        Log.Logger = this.CreateBootstrapLogger();
-
-        Log.Information("Starting web application");
-
-        return ValueTask.CompletedTask;
-    }
-
-    /// <summary>
-    /// Executes after the web application builder is created. Logs the current environment
-    /// and configures Serilog logging.
-    /// </summary>
-    /// <inheritdoc/>
-    public override ValueTask OnAfterCreateBuilder(WebApplicationBuilder builder)
-    {
-        Log.Information("Environment: {Environment}", builder.Environment.EnvironmentName);
+        logger.LogInformation("Starting web application");
+        logger.TryInformation()?.Log("Environment: {Environment}", builder.Environment.EnvironmentName);
 
         builder.Services.AddSerilog(this.ConfigureLogger, preserveStaticLogger: true);
 
@@ -58,9 +47,9 @@ public abstract class SerilogWebAppPlugin(
     /// Executes to configure application services. Logs the configuration process.
     /// </summary>
     /// <inheritdoc/>
-    public override ValueTask OnConfigureServices(WebApplicationBuilder builder)
+    public override ValueTask OnConfigureServices(WebApplicationBuilder builder, ILogger logger)
     {
-        Log.Information("Configuring services");
+        logger.LogInformation("Configuring services");
         return ValueTask.CompletedTask;
     }
 
@@ -68,9 +57,9 @@ public abstract class SerilogWebAppPlugin(
     /// Executes after services are configured. Logs the total number of services registered.
     /// </summary>
     /// <inheritdoc/>
-    public override ValueTask OnAfterConfigureServices(WebApplicationBuilder builder)
+    public override ValueTask OnAfterConfigureServices(WebApplicationBuilder builder, ILogger logger)
     {
-        Log.Information("Total services: {Count}", builder.Services.Count);
+        logger.TryInformation()?.Log("Total services: {Count}", builder.Services.Count);
         return ValueTask.CompletedTask;
     }
 
@@ -101,10 +90,8 @@ public abstract class SerilogWebAppPlugin(
     /// If no handler handles the exception, logs a critical error and returns an exit code of 1.
     /// </summary>
     /// <inheritdoc/>
-    public override TaskOrValue<int?> OnException(Exception exception, WebApplication? app)
+    public override TaskOrValue<int?> OnException(Exception exception, WebApplication? app, ILogger logger)
     {
-        var logger = GetLogger(app);
-
         foreach (var handler in this.GetExceptionHandlers())
         {
             int? result = handler.Invoke(exception, app, logger);
@@ -120,23 +107,37 @@ public abstract class SerilogWebAppPlugin(
     }
 
     /// <summary>
-    /// Executes during the finalization of the application lifecycle.
-    /// Flushes the logs and ensures all log entries are written.
+    /// Flushes <see cref="Log.Logger"/> the logs.
     /// </summary>
     /// <inheritdoc/>
-    public override ValueTask OnFinally(WebApplication? app)
+    public override ValueTask OnFinally(WebApplication? app, ILogger logger)
     {
-        var logger = GetLogger(app);
         logger.LogInformation("Flushing logs...");
         return Log.CloseAndFlushAsync();
     }
 
     /// <summary>
-    /// Creates the initial bootstrap logger configuration. Can be overridden by derived classes
-    /// to customize the logger settings.
+    /// Creates and configures a logger instance for use during application startup.
+    /// </summary>
+    /// <returns>An <see cref="ILogger"/> instance configured for early application startup logging.</returns>
+    public ILogger CreateBootstrapLogger()
+    {
+        var logger = this.OnCreateBootstrapLogger();
+
+        Log.Logger = logger;
+
+        using var loggerFactory = LoggerFactory.Create(
+           b => b.AddSerilog(logger));
+
+        return loggerFactory.CreateLogger("Startup");
+    }
+
+    /// <summary>
+    /// Creates the initial bootstrap logger configuration.
+    /// Can be overridden by derived classes to customize the logger settings.
     /// </summary>
     /// <returns>An instance of <see cref="ISerilogLogger"/> configured for the application.</returns>
-    protected virtual ISerilogLogger CreateBootstrapLogger()
+    protected virtual ISerilogLogger OnCreateBootstrapLogger()
     {
         return new LoggerConfiguration()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
@@ -163,17 +164,4 @@ public abstract class SerilogWebAppPlugin(
     /// A collection of exception handler delegates.
     /// </returns>
     protected virtual ICollection<Func<Exception, WebApplication?, ILogger, int?>> GetExceptionHandlers() => [];
-
-    private static ILogger GetLogger(WebApplication? app)
-    {
-        return app?.Logger ?? ToMicrosoftLogger(Log.Logger);
-    }
-
-    private static ILogger ToMicrosoftLogger(ISerilogLogger serilogLogger)
-    {
-        var factory = LoggerFactory.Create(
-            builder => builder.AddSerilog(serilogLogger, dispose: false));
-
-        return factory.CreateLogger(string.Empty);
-    }
 }

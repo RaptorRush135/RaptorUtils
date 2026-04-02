@@ -1,6 +1,7 @@
 ﻿namespace RaptorUtils.AspNet.Applications;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Logging;
 
 using RaptorUtils.Threading.Tasks;
 
@@ -21,66 +22,49 @@ public abstract class PluginEnabledWebAppDefinition : WebAppDefinition
     protected abstract ICollection<WebAppPlugin>? GetPlugins();
 
     /// <summary>
-    /// Executes the application run logic, including invoking the plugins' run logic before the base run logic.
-    /// </summary>
-    /// <param name="args">The command-line arguments passed to the application.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    protected override async Task OnRun(string[] args)
-    {
-        this.Plugins = this.GetPlugins() ?? Array.Empty<WebAppPlugin>();
-
-        await this.InvokePlugins(p => p.OnRun(args));
-
-        await base.OnRun(args);
-    }
-
-    /// <summary>
     /// Invoked after the application builder is created, filtering the plugins to include only enabled ones
     /// and invoking their post-creation logic.
     /// </summary>
-    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    protected override async ValueTask AfterCreateBuilder(WebApplicationBuilder builder)
+    /// <inheritdoc/>
+    protected override async ValueTask OnAfterCreateBuilder(WebApplicationBuilder builder, ILogger logger)
     {
+        this.Plugins = this.GetPlugins() ?? [];
+
         this.Plugins = await this.Plugins
             .ToAsyncEnumerable()
             .Where((p, _) => p.IsEnabled(builder).UnderlyingTask)
             .ToArrayAsync();
 
-        await this.InvokePlugins(p => p.OnAfterCreateBuilder(builder));
+        await this.InvokePlugins(p => p.OnAfterCreateBuilder(builder, logger));
     }
 
     /// <summary>
     /// Invoked to configure services for the application,
     /// allowing plugins to contribute their own service configurations.
     /// </summary>
-    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance to configure services for.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    protected override ValueTask ConfigureServices(WebApplicationBuilder builder)
-        => this.InvokePlugins(p => p.OnConfigureServices(builder));
+    /// <inheritdoc/>
+    protected override ValueTask OnConfigureServices(WebApplicationBuilder builder, ILogger logger)
+        => this.InvokePlugins(p => p.OnConfigureServices(builder, logger));
 
     /// <summary>
     /// Invoked after services have been configured, allowing plugins to execute additional configuration logic.
     /// </summary>
-    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    protected override ValueTask AfterConfigureServices(WebApplicationBuilder builder)
-        => this.InvokePlugins(p => p.OnAfterConfigureServices(builder));
+    /// <inheritdoc/>
+    protected override ValueTask OnAfterConfigureServices(WebApplicationBuilder builder, ILogger logger)
+        => this.InvokePlugins(p => p.OnAfterConfigureServices(builder, logger));
 
     /// <summary>
     /// Configures the web application's request pipeline, allowing plugins to add middleware or other configurations.
     /// </summary>
-    /// <param name="app">The <see cref="WebApplication"/> instance to configure.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    protected override ValueTask Configure(WebApplication app)
+    /// <inheritdoc/>
+    protected override ValueTask OnConfigure(WebApplication app)
         => this.InvokePlugins(p => p.OnConfigure(app));
 
     /// <summary>
     /// Invoked after the application has been configured, allowing plugins to perform additional configuration steps.
     /// </summary>
-    /// <param name="app">The <see cref="WebApplication"/> instance.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    protected override ValueTask AfterConfigure(WebApplication app)
+    /// <inheritdoc/>
+    protected override ValueTask OnAfterConfigure(WebApplication app)
         => this.InvokePlugins(p => p.OnAfterConfigure(app));
 
     /// <summary>
@@ -89,9 +73,8 @@ public abstract class PluginEnabledWebAppDefinition : WebAppDefinition
     /// has been fully configured and built, but before
     /// <see cref="WebApplication.RunAsync"/> is called.
     /// </summary>
-    /// <param name="app">The <see cref="WebApplication"/> instance.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    protected override ValueTask BeforeStartup(WebApplication app)
+    /// <inheritdoc/>
+    protected override ValueTask OnBeforeStartup(WebApplication app)
         => this.InvokePlugins(p => p.OnBeforeStartup(app));
 
     /// <summary>
@@ -99,13 +82,13 @@ public abstract class PluginEnabledWebAppDefinition : WebAppDefinition
     /// </summary>
     /// <returns>An integer exit code if handled by a plugin, or null if the exception should be re-thrown.</returns>
     /// <inheritdoc/>
-    protected override async TaskOrValue<int?> OnException(Exception exception, WebApplication? app)
+    protected override async TaskOrValue<int?> OnException(Exception exception, WebApplication? app, ILogger logger)
     {
         int? exitCode = null;
 
         foreach (var plugin in this.Plugins)
         {
-            exitCode ??= await plugin.OnException(exception, app);
+            exitCode ??= await plugin.OnException(exception, app, logger);
         }
 
         return exitCode;
@@ -116,8 +99,8 @@ public abstract class PluginEnabledWebAppDefinition : WebAppDefinition
     /// allowing plugins to perform cleanup or finalization.
     /// </summary>
     /// <inheritdoc/>
-    protected override ValueTask OnFinally(WebApplication? app)
-        => this.InvokePlugins(p => p.OnFinally(app));
+    protected override ValueTask OnFinally(WebApplication? app, ILogger logger)
+        => this.InvokePlugins(p => p.OnFinally(app, logger));
 
     /// <summary>
     /// Invokes a specified function on each plugin in the collection.

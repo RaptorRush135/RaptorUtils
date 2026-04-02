@@ -1,6 +1,7 @@
 ﻿namespace RaptorUtils.AspNet.Applications;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Logging;
 
 using RaptorUtils.Threading.Tasks;
 
@@ -13,14 +14,6 @@ using RaptorUtils.Threading.Tasks;
 public class WebAppPlugin(
     Func<WebApplicationBuilder, TaskOrValue<bool>>? isEnabled)
 {
-    /// <summary>
-    /// Executes logic when the application is run.
-    /// This method can be overridden to provide specific behavior when the application is starting.
-    /// </summary>
-    /// <param name="args">The command line arguments passed to the application.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual ValueTask OnRun(string[] args) => ValueTask.CompletedTask;
-
     /// <summary>
     /// Determines whether the plugin is enabled based on the provided <see cref="WebApplicationBuilder"/>.
     /// </summary>
@@ -36,24 +29,30 @@ public class WebAppPlugin(
     /// This method can be overridden to provide specific behavior after the builder is created.
     /// </summary>
     /// <param name="builder">The web application builder that was created.</param>
+    /// <param name="logger">Bootstrap logger.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual ValueTask OnAfterCreateBuilder(WebApplicationBuilder builder) => ValueTask.CompletedTask;
+    public virtual ValueTask OnAfterCreateBuilder(WebApplicationBuilder builder, ILogger logger)
+        => ValueTask.CompletedTask;
 
     /// <summary>
     /// Executes logic to configure services for the web application.
     /// This method can be overridden to provide specific service configuration behavior.
     /// </summary>
     /// <param name="builder">The web application builder for which services are being configured.</param>
+    /// <param name="logger">Bootstrap logger.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual ValueTask OnConfigureServices(WebApplicationBuilder builder) => ValueTask.CompletedTask;
+    public virtual ValueTask OnConfigureServices(WebApplicationBuilder builder, ILogger logger)
+        => ValueTask.CompletedTask;
 
     /// <summary>
     /// Executes logic after the services have been configured.
     /// This method can be overridden to provide specific behavior after service configuration.
     /// </summary>
     /// <param name="builder">The web application builder for which services were configured.</param>
+    /// <param name="logger">Bootstrap logger.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual ValueTask OnAfterConfigureServices(WebApplicationBuilder builder) => ValueTask.CompletedTask;
+    public virtual ValueTask OnAfterConfigureServices(WebApplicationBuilder builder, ILogger logger)
+        => ValueTask.CompletedTask;
 
     /// <summary>
     /// Executes logic to configure the web application.
@@ -89,10 +88,12 @@ public class WebAppPlugin(
     /// The <see cref="WebApplication"/> instance,
     /// or <see langword="null"/> if the application could not be fully constructed.
     /// </param>
+    /// <param name="logger">Bootstrap logger.</param>
     /// <returns>
     /// A task representing the asynchronous operation, with an optional integer indicating the exit code.
     /// </returns>
-    public virtual TaskOrValue<int?> OnException(Exception exception, WebApplication? app) => (int?)null;
+    public virtual TaskOrValue<int?> OnException(Exception exception, WebApplication? app, ILogger logger)
+        => (int?)null;
 
     /// <summary>
     /// Executes finalization logic for the plugin.
@@ -102,6 +103,8 @@ public class WebAppPlugin(
     /// The <see cref="WebApplication"/> instance,
     /// or <see langword="null"/> if the application could not be fully constructed.
     /// </param>
+    /// <param name="logger">Bootstrap logger.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public virtual ValueTask OnFinally(WebApplication? app) => ValueTask.CompletedTask;
+    public virtual ValueTask OnFinally(WebApplication? app, ILogger logger)
+        => ValueTask.CompletedTask;
 }

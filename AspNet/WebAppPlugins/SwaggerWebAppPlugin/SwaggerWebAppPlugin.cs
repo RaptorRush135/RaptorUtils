@@ -37,9 +37,8 @@ public class SwaggerWebAppPlugin(
     /// Configures the services required for Swagger in the web application.
     /// Invokes the optional metadata action and adds Swagger services with the provided setup action.
     /// </summary>
-    /// <param name="builder">The web application builder.</param>
     /// <inheritdoc/>
-    public override ValueTask OnConfigureServices(WebApplicationBuilder builder)
+    public override ValueTask OnConfigureServices(WebApplicationBuilder builder, ILogger logger)
     {
         metadataAction?.Invoke(builder);
 
@@ -51,11 +50,7 @@ public class SwaggerWebAppPlugin(
 
     /// <summary>
     /// Configures the middleware for serving Swagger and Swagger UI in the web application.
-    /// <para>
-    /// If a theme provider is specified, it applies the theme to the Swagger UI.
-    /// </para>
     /// </summary>
-    /// <param name="app">The web application instance.</param>
     /// <inheritdoc/>
     public override ValueTask OnConfigure(WebApplication app)
     {

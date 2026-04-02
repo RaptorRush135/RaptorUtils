@@ -1,6 +1,7 @@
 ﻿namespace RaptorUtils.AspNet.Applications;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Logging;
 
 using RaptorUtils.Threading.Tasks;
 
@@ -10,8 +11,6 @@ using RaptorUtils.Threading.Tasks;
 /// </summary>
 public abstract class WebAppDefinition
 {
-    private WebApplication? application;
-
     /// <summary>
     /// Runs the web application with the specified arguments.
     /// Handles the entire lifecycle, including exception handling and finalization logic.
@@ -20,13 +19,23 @@ public abstract class WebAppDefinition
     /// <returns>The exit code of the application, where 0 typically indicates success.</returns>
     public async Task<int> Run(string[] args)
     {
+        var logger = this.CreateBootstrapLogger();
+        var builder = this.CreateBuilder(args);
+
+        WebApplication? app = null;
+
         try
         {
-            await this.OnRun(args);
+            app = await this.Build(builder, logger);
+            logger = app.Logger;
+
+            await this.Configure(app);
+
+            await app.RunAsync();
         }
         catch (Exception ex)
         {
-            if (await this.OnException(ex, this.application) is { } exitCode)
+            if (await this.OnException(ex, app, logger) is { } exitCode)
             {
                 return exitCode;
             }
@@ -35,35 +44,41 @@ public abstract class WebAppDefinition
         }
         finally
         {
-            await this.OnFinally(this.application);
+            await this.OnFinally(app, logger);
         }
 
         return 0;
     }
 
     /// <summary>
-    /// The core logic to run the web application, responsible for creating the builder,
-    /// configuring services, building the application, and running it.
-    /// This method can be overridden to customize the application's setup.
+    /// Builds and configures a new <see cref="WebApplication"/> instance.
     /// </summary>
-    /// <param name="args">The command-line arguments passed to the application.</param>
+    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
+    /// <param name="logger">Bootstrap logger.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual async Task OnRun(string[] args)
+    protected async Task<WebApplication> Build(WebApplicationBuilder builder, ILogger logger)
     {
-        var builder = this.CreateBuilder(args);
-        await this.AfterCreateBuilder(builder);
+        await this.OnAfterCreateBuilder(builder, logger);
 
-        await this.ConfigureServices(builder);
-        await this.AfterConfigureServices(builder);
+        await this.OnConfigureServices(builder, logger);
+        await this.OnAfterConfigureServices(builder, logger);
 
-        var app = builder.Build();
-        this.application = app;
+        return builder.Build();
+    }
 
-        await this.Configure(app);
-        await this.AfterConfigure(app);
-
-        await this.BeforeStartup(app);
-        await app.RunAsync();
+    /// <summary>
+    /// Performs application configuration by invoking the configuration pipeline steps.
+    /// </summary>
+    /// <remarks>
+    /// This method executes the configuration steps in order: OnConfigure, OnAfterConfigure, and OnBeforeStartup.
+    /// </remarks>
+    /// <param name="app">The <see cref="WebApplication"/> instance.</param>
+    /// <returns>A task that represents the asynchronous configuration operation.</returns>
+    protected async Task Configure(WebApplication app)
+    {
+        await this.OnConfigure(app);
+        await this.OnAfterConfigure(app);
+        await this.OnBeforeStartup(app);
     }
 
     /// <summary>
@@ -75,42 +90,48 @@ public abstract class WebAppDefinition
     protected virtual WebApplicationBuilder CreateBuilder(string[] args) => WebApplication.CreateBuilder(args);
 
     /// <summary>
+    /// Creates a logger instance for use during application startup
+    /// before the main logging configuration is established.
+    /// </summary>
+    /// <returns>
+    /// An instance of <see cref="ILogger"/> to be used for logging during the application's bootstrap phase.
+    /// </returns>
+    protected abstract ILogger CreateBootstrapLogger();
+
+    /// <summary>
     /// Hook method called after the application builder is created.
     /// Override this method to customize behavior after builder creation.
     /// </summary>
     /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
+    /// <param name="logger">Bootstrap logger.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual ValueTask AfterCreateBuilder(WebApplicationBuilder builder) => ValueTask.CompletedTask;
+    protected virtual ValueTask OnAfterCreateBuilder(WebApplicationBuilder builder, ILogger logger)
+        => ValueTask.CompletedTask;
 
     /// <summary>
     /// Configures services for the application. This method must be implemented in derived classes.
     /// </summary>
     /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance to configure services for.</param>
+    /// <param name="logger">Bootstrap logger.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected abstract ValueTask ConfigureServices(WebApplicationBuilder builder);
+    protected abstract ValueTask OnConfigureServices(WebApplicationBuilder builder, ILogger logger);
 
     /// <summary>
     /// Hook method called after services have been configured.
     /// Override this method to add additional behavior after service configuration.
     /// </summary>
     /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
+    /// <param name="logger">Bootstrap logger.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual ValueTask AfterConfigureServices(WebApplicationBuilder builder) => ValueTask.CompletedTask;
-
-    /// <summary>
-    /// Builds the application using the configured <see cref="WebApplicationBuilder"/>.
-    /// Override this method to customize the building process.
-    /// </summary>
-    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance.</param>
-    /// <returns>The built <see cref="WebApplication"/>.</returns>
-    protected virtual WebApplication Build(WebApplicationBuilder builder) => builder.Build();
+    protected virtual ValueTask OnAfterConfigureServices(WebApplicationBuilder builder, ILogger logger)
+        => ValueTask.CompletedTask;
 
     /// <summary>
     /// Configures the web application's request pipeline. This method must be implemented in derived classes.
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> instance to configure.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected abstract ValueTask Configure(WebApplication app);
+    protected abstract ValueTask OnConfigure(WebApplication app);
 
     /// <summary>
     /// Hook method called after the application has been configured.
@@ -118,7 +139,7 @@ public abstract class WebAppDefinition
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> instance.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual ValueTask AfterConfigure(WebApplication app) => ValueTask.CompletedTask;
+    protected virtual ValueTask OnAfterConfigure(WebApplication app) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Hook method called immediately before the application starts running.
@@ -128,7 +149,7 @@ public abstract class WebAppDefinition
     /// </summary>
     /// <param name="app">The <see cref="WebApplication"/> instance.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual ValueTask BeforeStartup(WebApplication app) => ValueTask.CompletedTask;
+    protected virtual ValueTask OnBeforeStartup(WebApplication app) => ValueTask.CompletedTask;
 
     /// <summary>
     /// Handles any exceptions that occur during the application's execution.
@@ -139,8 +160,10 @@ public abstract class WebAppDefinition
     /// The <see cref="WebApplication"/> instance,
     /// or <see langword="null"/> if the application could not be fully constructed.
     /// </param>
+    /// <param name="logger">The logger to use for recording exception details.</param>
     /// <returns>An integer exit code if handled, or null if the exception should be re-thrown.</returns>
-    protected virtual TaskOrValue<int?> OnException(Exception exception, WebApplication? app) => (int?)null;
+    protected virtual TaskOrValue<int?> OnException(Exception exception, WebApplication? app, ILogger logger)
+        => (int?)null;
 
     /// <summary>
     /// Hook method called after the application has finished running, regardless of whether an exception occurred.
@@ -150,6 +173,8 @@ public abstract class WebAppDefinition
     /// The <see cref="WebApplication"/> instance,
     /// or <see langword="null"/> if the application could not be fully constructed.
     /// </param>
+    /// <param name="logger">The logger to use for recording finalization events.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    protected virtual ValueTask OnFinally(WebApplication? app) => ValueTask.CompletedTask;
+    protected virtual ValueTask OnFinally(WebApplication? app, ILogger logger)
+        => ValueTask.CompletedTask;
 }

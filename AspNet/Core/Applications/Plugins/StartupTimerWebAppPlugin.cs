@@ -21,15 +21,14 @@ public sealed class StartupTimerWebAppPlugin(
     /// Records the starting timestamp when the application begins running.
     /// </summary>
     /// <inheritdoc />
-    public override ValueTask OnRun(string[] args)
+    public override ValueTask OnAfterCreateBuilder(WebApplicationBuilder builder, ILogger logger)
     {
         this.startTimestamp = Stopwatch.GetTimestamp();
-
         return ValueTask.CompletedTask;
     }
 
     /// <summary>
-    /// Calculates the elapsed time since <see cref="OnRun"/> and logs it.
+    /// Calculates the elapsed time since <see cref="OnAfterCreateBuilder"/> and logs it.
     /// </summary>
     /// <inheritdoc />
     public override ValueTask OnBeforeStartup(WebApplication app)
