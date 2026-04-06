@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="nuget.config" />
+  </Folder>
+  <Project Path="Aspire/Aspire.Hosting.JavaScript/RaptorUtils.Aspire.Hosting.JavaScript.csproj" />
+  <Project Path="Aspire/Aspire.Hosting/RaptorUtils.Aspire.Hosting.csproj" />
+  <Project Path="AspNet/Core/RaptorUtils.AspNet.csproj" />
+  <Project Path="AspNet/EntityFramework/RaptorUtils.AspNet.EntityFramework.csproj" />
+  <Project Path="AspNet/WebAppPlugins/SerilogWebAppPlugin/RaptorUtils.AspNet.SerilogWebAppPlugin.csproj" />
+  <Project Path="AspNet/WebAppPlugins/SwaggerWebAppPlugin/RaptorUtils.AspNet.SwaggerWebAppPlugin.csproj" />
+  <Project Path="Core/RaptorUtils.Core.csproj" />
+  <Project Path="EntityFramework/RaptorUtils.EntityFramework.csproj" />
+  <Project Path="FluentValidation/RaptorUtils.FluentValidation.csproj" />
+</Solution>
