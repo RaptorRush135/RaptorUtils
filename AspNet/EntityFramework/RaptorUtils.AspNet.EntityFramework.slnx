@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../../Core/RaptorUtils.Core.csproj" />
+  <Project Path="../../EntityFramework/RaptorUtils.EntityFramework.csproj" />
+</Solution>

@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../Aspire.Hosting/RaptorUtils.Aspire.Hosting.csproj" />
+  <Project Path="../../Core/RaptorUtils.Core.csproj" />
+</Solution>
