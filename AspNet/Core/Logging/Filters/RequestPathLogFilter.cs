@@ -1,5 +1,7 @@
 ﻿namespace RaptorUtils.AspNet.Logging.Filters;
 
+using System.Diagnostics.CodeAnalysis;
+
 using Serilog.Core;
 using Serilog.Events;
 
@@ -33,11 +35,24 @@ public class RequestPathLogFilter(
     public bool IsEnabled(LogEvent logEvent)
     {
         if (logEvent.Level >= minimumLevel
-            || !logEvent.Properties.TryGetValue("RequestPath", out var path))
+            || !TryGetPath(logEvent, out var path))
         {
             return true;
         }
 
-        return pathFilter.Invoke(path.ToString());
+        return pathFilter.Invoke(path);
+    }
+
+    private static bool TryGetPath(LogEvent logEvent, [MaybeNullWhen(false)] out string path)
+    {
+        if (!logEvent.Properties.TryGetValue("RequestPath", out var value)
+            || value is not ScalarValue { Value: string pathString })
+        {
+            path = null;
+            return false;
+        }
+
+        path = pathString;
+        return true;
     }
 }

@@ -3,20 +3,22 @@
 using Serilog.Events;
 
 /// <summary>
-/// A log filter that enables logging for events where the request path starts with a specified prefix,
-/// or the log level is greater than or equal to a specified minimum.
+/// A log filter that conditionally enables logging based on the request path prefix,
+/// or unconditionally when the log level meets or exceeds a specified minimum.
 /// </summary>
-/// <param name="prefix">The prefix that the request path must start with to enable logging.</param>
-/// <param name="comparison">
-/// The string comparison option to use when checking the prefix.
+/// <param name="prefix">Request path prefix to match.</param>
+/// <param name="exclude">
+/// If <see langword="true"/>, excludes matching paths; if <see langword="false"/>, includes only matching paths.
 /// </param>
+/// <param name="comparison">String comparison used for prefix matching.</param>
 /// <param name="minimumLevel">
-/// The minimum log level at which events are always logged, regardless of their request path.
+/// Log level threshold above which events are always included.
 /// </param>
 public class RequestPathPrefixLogFilter(
     string prefix,
+    bool exclude = false,
     StringComparison comparison = StringComparison.InvariantCulture,
     LogEventLevel minimumLevel = LogEventLevel.Warning)
     : RequestPathLogFilter(
-        path => path.StartsWith($"\"{prefix}", comparison),
+        path => path.StartsWith(prefix, comparison) != exclude,
         minimumLevel);
