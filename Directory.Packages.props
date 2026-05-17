@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <AspireVersion>13.3.0</AspireVersion>
-    <MicrosoftExtensionsVersion>10.0.7</MicrosoftExtensionsVersion>
+    <MicrosoftExtensionsVersion>10.0.8</MicrosoftExtensionsVersion>
   </PropertyGroup>
 
   <!--Analyzers-->
