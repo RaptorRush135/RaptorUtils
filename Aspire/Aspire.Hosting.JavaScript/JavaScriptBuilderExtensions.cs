@@ -16,15 +16,17 @@ public static class JavaScriptBuilderExtensions
     /// This method finds an available port and assigns it to the resource.
     /// </summary>
     /// <param name="builder">The resource builder to extend.</param>
+    /// <param name="positional">Indicates whether the port should be passed as a positional argument.</param>
     /// <returns>
     /// An updated instance of <see cref="IResourceBuilder{JavaScriptAppResource}"/>
     /// configured with a random port.</returns>
     public static IResourceBuilder<JavaScriptAppResource> WithRandomPort(
-        this IResourceBuilder<JavaScriptAppResource> builder)
+        this IResourceBuilder<JavaScriptAppResource> builder,
+        bool positional = true)
     {
         int port = PortFinder.GetAvailablePort();
 
-        return builder.WithPort(port);
+        return builder.WithPort(port, positional);
     }
 
     /// <summary>
@@ -33,15 +35,26 @@ public static class JavaScriptBuilderExtensions
     /// </summary>
     /// <param name="builder">The resource builder to extend.</param>
     /// <param name="port">The port number to assign to the resource.</param>
+    /// <param name="positional">Indicates whether the port should be passed as a positional argument.</param>
     /// <returns>
     /// An updated instance of <see cref="IResourceBuilder{JavaScriptAppResource}"/> configured with the specified port.
     /// </returns>
     public static IResourceBuilder<JavaScriptAppResource> WithPort(
         this IResourceBuilder<JavaScriptAppResource> builder,
-        int port)
+        int port,
+        bool positional = true)
     {
-        return builder
-            .WithPositionalArgs($"--port={port}")
-            .WithHttpEndpoint(targetPort: port);
+        string portArg = $"--port={port}";
+
+        if (positional)
+        {
+            builder.WithPositionalArgs(portArg);
+        }
+        else
+        {
+            builder.WithArgs(portArg);
+        }
+
+        return builder.WithHttpEndpoint(targetPort: port);
     }
 }
