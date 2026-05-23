@@ -10,6 +10,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);S1135</WarningsNotAsErrors> <!--Allow TODO warns-->
+  </PropertyGroup>
+
   <ItemGroup>
 
     <PackageReference Include="StyleCop.Analyzers.Unstable">
