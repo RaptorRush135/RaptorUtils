@@ -3,7 +3,6 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <CentralPackageFloatingVersionsEnabled>true</CentralPackageFloatingVersionsEnabled>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -13,9 +12,9 @@
 
   <!--Analyzers-->
   <ItemGroup>
-    <PackageVersion Include="StyleCop.Analyzers.Unstable" Version="1.2.*" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.*" />
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.*" />
+    <PackageVersion Include="StyleCop.Analyzers.Unstable" Version="1.2.0.556" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.26.0.140279" />
+    <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
     <PackageVersion Include="MustUseRetVal" Version="0.0.2" />
   </ItemGroup>
 
