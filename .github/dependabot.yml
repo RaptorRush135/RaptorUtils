@@ -3,6 +3,15 @@
 version: 2
 
 updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "dev-deps"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "12:00"
+      timezone: "UTC"
+
   - package-ecosystem: "nuget"
     directory: "/"
     target-branch: "dev-deps"
