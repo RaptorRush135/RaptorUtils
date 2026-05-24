@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="RaptorUtils.AspNet.SerilogWebAppPlugin.csproj" />
   <Project Path="../../../Core/RaptorUtils.Core.csproj" />
   <Project Path="../../Core/RaptorUtils.AspNet.csproj" />
 </Solution>
