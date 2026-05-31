@@ -13,7 +13,7 @@
   <!--Analyzers-->
   <ItemGroup>
     <PackageVersion Include="StyleCop.Analyzers.Unstable" Version="1.2.0.556" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.26.0.140279" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.27.0.140913" />
     <PackageVersion Include="Roslynator.Analyzers" Version="4.15.0" />
     <PackageVersion Include="MustUseRetVal" Version="0.0.2" />
   </ItemGroup>
@@ -34,7 +34,7 @@
 
     <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
 
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.0" />
 
     <PackageVersion Include="NGuid" Version="1.0.0" />
 
