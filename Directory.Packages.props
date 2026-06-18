@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AspireVersion>13.4.4</AspireVersion>
+    <AspireVersion>13.4.5</AspireVersion>
     <MicrosoftExtensionsVersion>10.0.9</MicrosoftExtensionsVersion>
   </PropertyGroup>
 
