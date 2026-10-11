@@ -37,7 +37,7 @@
 
     <PackageVersion Include="NGuid" Version="1.0.0" />
 
-    <PackageVersion Include="FluentValidation" Version="12.1.1" />
+    <PackageVersion Include="FluentValidation" Version="12.2.0" />
   </ItemGroup>
 
 </Project>
