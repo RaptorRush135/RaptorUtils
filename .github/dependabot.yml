@@ -33,13 +33,11 @@ updates:
         patterns:
           - "Aspire.*"
           - "CommunityToolkit.Aspire.*"
-      entity-framework:
+      efcore-and-extensions:
         patterns:
           - "*EntityFrameworkCore*"
           - "EFCore.*"
           - "dotnet-ef"
-      ms-extensions:
-        patterns:
           - "Microsoft.Extensions.*"
       fluent-validation:
         patterns:
