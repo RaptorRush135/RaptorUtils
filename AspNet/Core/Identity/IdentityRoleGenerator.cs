@@ -6,10 +6,7 @@ using Microsoft.AspNetCore.Identity;
 /// A specialized <see cref="IdentityRoleGenerator{TRole, TKey}"/> that generates roles
 /// with <see cref="Guid"/> identifiers.
 /// </summary>
-/// <typeparam name="TRole">
-/// The role type to generate. Must derive from <see cref="IdentityRole{Guid}"/>
-/// and have a public parameterless constructor.
-/// </typeparam>
+/// <inheritdoc/>
 public class IdentityRoleGenerator<TRole>(
     Guid namespaceId,
     ILookupNormalizer? normalizer = null)

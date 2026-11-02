@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 /// A wrapper for <see cref="IdentityResult"/> that includes a user object.
 /// </summary>
 /// <typeparam name="TUser">The type of the user object.</typeparam>
+/// <param name="result">The <see cref="IdentityResult"/> to wrap.</param>
+/// <param name="user">The user object associated with the operation.</param>
 public class UserIdentityResult<TUser>(IdentityResult result, TUser? user)
     where TUser : class
 {

@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 /// and can be implicitly created from a <typeparamref name="TResult"/> value or a <see cref="ValueTask{TResult}"/>.
 /// </summary>
 /// <typeparam name="TResult">The type of the result.</typeparam>
+/// <param name="task">The underlying <see cref="ValueTask{TResult}"/>.</param>
 [AsyncMethodBuilder(typeof(TaskOrValueMethodBuilder<>))]
 [method: MethodImpl(MethodImplOptions.AggressiveInlining)]
 public readonly struct TaskOrValue<TResult>(
