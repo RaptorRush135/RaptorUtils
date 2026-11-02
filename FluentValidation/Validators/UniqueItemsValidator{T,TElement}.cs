@@ -20,8 +20,8 @@ public class UniqueItemsValidator<T, TElement>
     public override string Name => nameof(UniqueItemsValidator<,>);
 
     /// <inheritdoc/>
-    public override bool IsValid(ValidationContext<T> context, IEnumerable<TElement> collection)
-        => !collection.ContainsDuplicates();
+    public override bool IsValid(ValidationContext<T> context, IEnumerable<TElement> value)
+        => !value.ContainsDuplicates();
 
     /// <summary>
     /// Returns the default error message template for this validator.
