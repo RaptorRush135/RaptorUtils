@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 
 using RaptorUtils.Threading.Tasks;
 
+using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 /// <summary>
@@ -26,11 +27,15 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 /// Can be used to register additional middleware or perform runtime configuration
 /// before `UseSwagger` &amp; `UseSwaggerUI` are applied.
 /// </param>
+/// <param name="useSwaggerSetupActionProvider">
+/// An optional function that provides a setup action for Swagger middleware options.
+/// </param>
 public class SwaggerWebAppPlugin(
     Func<WebApplicationBuilder, TaskOrValue<bool>>? isEnabled = null,
     Action<WebApplicationBuilder>? metadataAction = null,
     Func<WebApplicationBuilder, Action<SwaggerGenOptions>>? setupActionProvider = null,
-    Action<WebApplication>? onConfigure = null)
+    Action<WebApplication>? onConfigure = null,
+    Func<WebApplication, Action<SwaggerOptions>>? useSwaggerSetupActionProvider = null)
     : WebAppPlugin(isEnabled)
 {
     /// <summary>
@@ -56,7 +61,8 @@ public class SwaggerWebAppPlugin(
     {
         onConfigure?.Invoke(app);
 
-        app.UseSwagger();
+        var useSwaggerSetupAction = useSwaggerSetupActionProvider?.Invoke(app);
+        app.UseSwagger(useSwaggerSetupAction);
         app.UseSwaggerUI();
 
         app.Logger.LogWarning("Swagger enabled");
